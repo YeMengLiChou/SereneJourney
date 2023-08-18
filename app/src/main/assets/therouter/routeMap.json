@@ -1,0 +1,30 @@
+[
+  {
+    "path": "http://serenejourney.com/user",
+    "className": "com.sll.mod_user.ui.UserActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "http://serenejourney.com/settings",
+    "className": "com.sll.mod_settings.ui.SettingActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "http://serenejourney.com/login/login",
+    "className": "com.sll.mod_login.ui.LoginActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "http://serenejourney.com/login",
+    "className": "com.sll.mod_login.ui.LoginActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  }
+]
