@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="main_toolbar_theme" parent="ThemeOverlay.AppCompat.Light">
+<!--    <item name="android:colorControlNormal">@color/main_white</item>-->
+    <item name="colorControlNormal">@color/main_white</item>
+</style>
+
+<!--  用于图标点击  -->
+    <style name="main_icon_imageView">
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="main_imageview_icon_with_text">
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="main_textview_with_icon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/main_gray_dim</item>
+    </style>
+
+    <style name="main_linear_layout_items">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="main_textview_with_shadow">
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:shadowColor">@color/main_gray_dim</item>
+        <item name="android:shadowRadius">3</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
+
+    </style>
+
+</resources>

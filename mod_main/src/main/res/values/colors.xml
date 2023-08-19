@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="main_white">#FFFFFFFF</color>
+    <color name="main_white_lead">#FFF0F0F0</color>
+    <color name="main_MintCream">#FFF7FBFC</color>
+    <color name="main_blue_alice">#FFD6E6F2</color>
+    <color name="main_blue_light">#FFB9D7EA</color>X
+    <color name="main_blue_cornflower">#FF769FCD</color>
+    
+    <color name="main_gray_dim">#FF585268</color>
+
+    <color name="main_black">#000000</color>
+
+    <color name="main_most_background">#F0F0F0</color>
+
+
+
+    <color name="main_transparent">#00000000</color>
+    <color name="main_translucent">#80000000</color>
+</resources>

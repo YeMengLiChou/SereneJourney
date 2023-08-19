@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/main_item_download_background"
+        android:title="@string/main_download_background"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/main_item_switch_background"
+        android:title="@string/main_switch_background"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/main_item_custom_background"
+        android:title="@string/main_custom_background"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/main_item_switch_caption"
+        android:title="@string/main_switch_caption"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/main_item_copy_caption"
+        android:title="@string/main_copy_caption"
+        app:showAsAction="never"/>
+</menu>

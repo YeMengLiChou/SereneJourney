@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/main_item_download"
+        android:title="@string/main_download_cover"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/main_item_switch_cover"
+        android:title="@string/main_switch_cover"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/main_item_custom"
+        android:title="@string/main_custom_cover"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/main_item_suggestion"
+        android:title="@string/main_suggestion"
+        app:showAsAction="never"/>
+</menu>

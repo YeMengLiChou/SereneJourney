@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+
+
+    <!--    主布局 -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--      fragment容器  -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/main_fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!--        顶部图片布局 -->
+        <RelativeLayout
+            android:id="@+id/relative_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="216dp">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="@android:color/transparent"
+                android:theme="@style/main_toolbar_theme"
+                android:translationZ="2dp" />
+
+            <ImageView
+                android:id="@+id/iv_toolbar_background"
+                android:layout_width="match_parent"
+                android:layout_height="216dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/main_background_test" />
+
+        </RelativeLayout>
+
+
+        <com.sll.lib_framework.widget.LAppBarLayout
+            android:id="@+id/appbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:elevation="0dp">
+
+            <!-- 占位布局 -->
+            <Space
+                android:id="@+id/space_fill"
+                android:layout_width="match_parent"
+                android:layout_height="192dp"
+                app:layout_scrollFlags="scroll" />
+            <!-- 状态栏占位符 -->
+            <Space
+                android:id="@+id/space_bar"
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <RelativeLayout
+                android:id="@+id/layout_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/main_white">
+
+                <ImageView
+                    android:id="@+id/bt_drawer_menu"
+                    style="@style/main_icon_imageView"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="16dp"
+                    android:src="@drawable/main_ic_drawer_menu" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@android:color/transparent"
+                    android:overScrollMode="always"
+                    app:tabIconTint="@color/main_blue_cornflower"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabMode="auto"
+                    app:tabRippleColor="@null" />
+
+            </RelativeLayout>
+
+        </com.sll.lib_framework.widget.LAppBarLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager2_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_edit_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:backgroundTint="@color/main_white"
+            android:src="@drawable/main_ic_edit"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/viewpager2_content"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_behavior="@string/main_behavior_upper_fab"
+            app:rippleColor="#E0E0E0" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_back_to_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:backgroundTint="@color/main_white"
+            android:contentDescription="@string/main_back_to_top"
+            android:scaleType="matrix"
+            android:src="@drawable/main_ic_backtop"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/viewpager2_content"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_behavior="@string/main_behavior_fab"
+            app:rippleColor="#E0E0E0" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <!--   抽屉布局 -->
+    <include
+        android:id="@+id/include_drawer"
+        layout="@layout/main_layout_drawer"
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/main_white_lead"
+        android:clickable="true"
+        android:focusable="true">
+    </include>
+
+</androidx.drawerlayout.widget.DrawerLayout>

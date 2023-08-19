@@ -1,0 +1,18 @@
+<resources>
+    <string name="main_app_name">mod_main</string>
+    <string name="main_discover">发现</string>
+    <string name="main_mine">我</string>
+    <string name="main_download_cover">下载封面</string>
+    <string name="main_switch_cover">切换封面</string>
+    <string name="main_custom_cover">自定义封面</string>
+    <string name="main_suggestion">意见反馈</string>
+    <string name="main_back_to_top">back to top</string>
+    <string name="main_switch_caption">切换配文</string>
+    <string name="main_custom_background">自定义背景</string>
+    <string name="main_switch_background">切换背景</string>
+    <string name="main_download_background">下载背景</string>
+    <string name="main_copy_caption">复制配文</string>
+    <string name="main_login_register_first">请先登录/注册!</string>
+    <string name="main_user_no_introduce">这个人很懒，什么也没写</string>
+    <string name="main_welcome_days">来到这里 %1$s 天~</string>
+</resources>
