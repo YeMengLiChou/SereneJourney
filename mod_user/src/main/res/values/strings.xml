@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="user_sex_male">男</string>
+    <string name="user_sex_female">女</string>
+    <string name="user_sex_unknown">保密</string>
+    <string name="user_cancel">取消</string>
+    <string name="user_confirm">确定</string>
+    <string name="user_camera">相机拍摄图片</string>
+    <string name="user_album">相册选取图片</string>
+</resources>

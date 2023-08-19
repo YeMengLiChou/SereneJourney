@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<!--   顶部滑动的部分 -->
+    <com.sll.lib_framework.widget.LAppBarLayout
+        android:id="@+id/user_appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/user_constraintLayout_topBar"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:minHeight="128dp"
+            app:layout_scrollFlags="exitUntilCollapsed|scroll">
+
+            <ImageView
+                android:id="@+id/user_iv_background_top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/user_gray_dim" />
+
+            <View
+                android:id="@+id/user_view_background_mask"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/user_white"/>
+
+            <ImageView
+                android:id="@+id/user_iv_avatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintVertical_bias="0.8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/user_tabLayout"
+                tools:background="@color/user_pink_a200" />
+
+            <TextView
+                android:id="@+id/user_tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/user_white"
+                android:textSize="28sp"
+                app:layout_constraintBottom_toBottomOf="@id/user_iv_avatar"
+                app:layout_constraintStart_toEndOf="@id/user_iv_avatar"
+                app:layout_constraintTop_toTopOf="@id/user_iv_avatar"
+                tools:text="username" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/user_tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="@android:color/transparent"
+                android:elevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tabIndicatorColor="@color/user_white"
+                app:tabIndicatorFullWidth="false"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.sll.lib_framework.widget.LAppBarLayout>
+
+<!--   顶部状态栏  -->
+    <RelativeLayout
+        android:id="@+id/user_layout_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="top"
+        android:translationZ="10dp"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:id="@+id/user_iv_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="8dp"
+            android:padding="12dp"
+            android:background="@drawable/user_ripple_click_round_background"
+            android:src="@drawable/user_ic_left_arrow"
+            app:tint="@color/user_white" />
+
+
+        <ImageView
+            android:id="@+id/user_iv_avatar_topBar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:scaleType="centerInside"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="8dp"
+            android:layout_toEndOf="@id/user_iv_back"
+            android:src="@drawable/user_ic_default_avatar" />
+
+        <TextView
+            android:id="@+id/user_tv_username_topBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="8dp"
+            android:layout_toEndOf="@id/user_iv_avatar_topBar"
+            android:paddingHorizontal="8dp"
+            android:textSize="20sp"
+            tools:text="username" />
+
+    </RelativeLayout>
+
+
+
+<!--内容视图-->
+    <!--    <androidx.viewpager2.widget.ViewPager2-->
+    <!--        android:id="@+id/user_viewpager2_content"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="2000dp"-->
+    <!--        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />-->
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <TextView
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:layout_gravity="bottom|end" />
+
+<!--承载 fragment 容器-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/user_fragmentContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="15dp"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

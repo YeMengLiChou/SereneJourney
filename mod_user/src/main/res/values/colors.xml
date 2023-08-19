@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="user_white">#FFFFFFFF</color>
+    <color name="user_white_lead">#FFF0F0F0</color>
+    <color name="user_MintCream">#FFF7FBFC</color>
+    <color name="user_blue_alice">#FFD6E6F2</color>
+    <color name="user_blue_light">#FFB9D7EA</color>
+    <color name="user_blue_light_a80">#80B9D7EA</color>
+    <color name="user_blue_cornflower">#FF769FCD</color>
+
+    <color name="user_gray_dim">#FF585268</color>
+    <color name="user_gray_100_a80">#80f5f5f5</color>
+
+    <color name="user_black">#000000</color>
+
+    <color name="user_most_background">#F0F0F0</color>
+
+    <color name="user_pink_a200">#ff80ab</color>
+    <color name="user_pink_100_a80">#80f8bbd0</color>
+
+    <color name="user_transparent">#00000000</color>
+    <color name="user_translucent">#80000000</color>
+</resources>

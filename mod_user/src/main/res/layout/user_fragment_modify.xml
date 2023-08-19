@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/user_white_lead"
+    android:fitsSystemWindows="true"
+    android:clickable="true"
+    android:focusable="true"
+    >
+
+    <!--   顶部状态栏  -->
+    <RelativeLayout
+        android:id="@+id/user_layout_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:translationZ="2dp">
+
+        <ImageView
+            android:id="@+id/user_iv_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="8dp"
+            android:padding="12dp"
+            android:foreground="@drawable/user_ripple_click_round_background"
+            android:src="@drawable/user_ic_left_arrow"
+            app:tint="@color/user_black" />
+
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        app:cardCornerRadius="54dp"
+        android:padding="4dp"
+        app:cardElevation="4dp">
+
+        <ImageView
+            android:id="@+id/user_iv_avatar"
+            android:layout_width="108dp"
+            android:layout_height="108dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/user_ic_default_avatar"
+            android:foreground="@drawable/user_ripple_foreground"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <RelativeLayout
+        android:id="@+id/user_layout_username"
+        style="@style/user_relativeLayout_modify_items">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="昵称"/>
+
+        <TextView
+            android:id="@+id/user_tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            tools:text="叶梦璃愁"
+            android:layout_marginEnd="48dp"
+            android:layout_alignParentEnd="true"/>
+
+        <ImageView
+            style="@style/user_imageview_right_icon" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="#F0F0F0"
+        app:dividerInsetStart="16dp"
+        app:dividerInsetEnd="16dp"/>
+
+
+    <RelativeLayout
+        android:id="@+id/user_layout_sex"
+        style="@style/user_relativeLayout_modify_items">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="性别"/>
+
+        <TextView
+            android:id="@+id/user_tv_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            tools:text="男"
+            android:layout_marginEnd="48dp"
+            android:layout_alignParentEnd="true"/>
+
+        <ImageView
+            style="@style/user_imageview_right_icon" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="#F0F0F0"
+        app:dividerInsetStart="16dp"
+        app:dividerInsetEnd="16dp"/>
+
+    <RelativeLayout
+        android:id="@+id/user_layout_introduce"
+        style="@style/user_relativeLayout_modify_items">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="个人介绍"/>
+
+        <TextView
+            android:id="@+id/user_tv_introduce"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            tools:text="hahahaha~"
+            android:layout_marginEnd="48dp"
+            android:layout_alignParentEnd="true"/>
+
+        <ImageView
+            style="@style/user_imageview_right_icon" />
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

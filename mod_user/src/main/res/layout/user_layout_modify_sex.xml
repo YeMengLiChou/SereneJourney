@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="216dp"
+    android:layout_gravity="center"
+    android:layout_margin="16dp"
+    android:padding="16dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/user_tv_male"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:foreground="@drawable/user_ripple_foreground"
+        android:text="@string/user_sex_male"
+        android:textSize="20sp"
+        android:textColor="@color/user_blue_cornflower"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/user_tv_unknown"/>
+
+    <TextView
+        android:id="@+id/user_tv_unknown"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:foreground="@drawable/user_ripple_foreground"
+        android:text="@string/user_sex_unknown"
+        android:textSize="20sp"
+        android:textColor="@color/user_gray_dim"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/user_tv_female"
+        app:layout_constraintStart_toEndOf="@+id/user_tv_male"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/user_tv_female"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:foreground="@drawable/user_ripple_foreground"
+        android:textColor="@color/user_pink_a200"
+        android:text="@string/user_sex_female"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/user_tv_unknown"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
