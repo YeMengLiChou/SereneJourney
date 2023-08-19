@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@null">
+
+    <androidx.cardview.widget.CardView
+        style="@style/login_cardView"
+        app:cardBackgroundColor="#F0FFFFFF"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="24dp"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="24dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_inputLayout_username"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_username"
+                app:errorEnabled="true"
+                app:errorTextColor="@color/login_red_A200"
+                app:expandedHintEnabled="true"
+                app:hintTextAppearance="@style/login_edittext_hint"
+                app:layout_constraintBottom_toTopOf="@id/login_inputLayout_password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:startIconDrawable="@drawable/login_ic_user">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_et_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_inputLayout_password"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_password"
+                app:layout_constraintBottom_toBottomOf="@id/login_cb_remember"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/login_inputLayout_username"
+                app:passwordToggleEnabled="true"
+                app:startIconDrawable="@drawable/login_ic_password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--记住密码复选框-->
+            <CheckBox
+                android:id="@+id/login_cb_remember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_remember_password"
+                android:textColor="@color/login_gray_dim"
+                app:layout_constraintBottom_toTopOf="@+id/login_guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_inputLayout_password"
+                tools:text="记住密码" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/login_guideline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.8" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/login_bt_login"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:alpha="0.8"
+                android:text="@string/login_user_login"
+                android:textStyle="bold"
+                app:backgroundTint="@color/login_blue_cornflower"
+                app:cornerRadius="4dp"
+                app:elevation="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/login_bt_register"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/login_guideline"
+                app:layout_constraintWidth_percent="0.45"
+                app:rippleColor="#80E0E0E0"
+                app:strokeColor="@color/login_blue_cornflower"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/login_bt_register"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:alpha="0.9"
+                android:text="@string/login_register_imm"
+                android:textColor="@color/login_blue_cornflower"
+                android:textStyle="bold"
+                app:backgroundTint="@color/login_white_alpha"
+                app:cornerRadius="4dp"
+                app:iconPadding="-16dp"
+                app:elevation="0dp"
+                app:icon="@drawable/login_ic_right_arrow"
+                app:iconGravity="end"
+                app:iconSize="16dp"
+                app:iconTint="@color/login_blue_cornflower"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/login_bt_login"
+                app:layout_constraintTop_toBottomOf="@id/login_guideline"
+                app:layout_constraintWidth_percent="0.45"
+                app:rippleColor="#80E0E0E0"
+                app:strokeColor="@color/login_blue_cornflower"
+                app:strokeWidth="1dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <style name="login_cardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+
+
+    <style name="login_edittext_hint">
+        <item name="android:textSize">10sp</item>
+        <item name="android:background">#F0FFFFFF</item>
+    </style>
+</resources>

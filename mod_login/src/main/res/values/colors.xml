@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="login_white">#FFFFFFFF</color>
+    <color name="login_white_lead">#FFF0F0F0</color>
+
+    <color name="login_white_alpha">#F0FFFFFF</color>
+
+    <color name="login_MintCream">#FFF7FBFC</color>
+    <color name="login_blue_alice">#FFD6E6F2</color>
+    <color name="login_blue_light">#FFB9D7EA</color>X
+    <color name="login_blue_cornflower">#FF769FCD</color>
+
+    <color name="login_gray_dim">#FF585268</color>
+
+    <color name="login_black">#000000</color>
+
+    <color name="login_most_background">#F0F0F0</color>
+
+    <color name="login_red_A200">#ff5252</color>
+
+    <color name="login_transparent">#00000000</color>
+    <color name="login_translucent">#80000000</color>
+</resources>
