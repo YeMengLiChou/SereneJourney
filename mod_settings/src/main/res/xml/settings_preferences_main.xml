@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <PreferenceCategory
+        app:title="账号"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="@string/settings_account"
+            app:title="账号管理"
+            app:singleLineTitle="true"
+            app:iconSpaceReserved="false"
+            app:fragment="@string/settings_fragment_account" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="图片"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:key="@string/settings_picture_save_path"
+            app:title="图片保存路径"
+            app:iconSpaceReserved="false"
+            app:summary="当前位置:"
+            app:defaultValue=""
+            android:persistent="true"/>
+
+        <Preference
+            app:key="@string/settings_picture_clear_cache"
+            app:title="清理缓存"
+            app:iconSpaceReserved="false"
+            app:summary="当前缓存"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="个性化"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="@string/settings_custom_theme"
+            app:title="应用主题色"
+            app:iconSpaceReserved="false"
+            />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="更多"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="@string/settings_more_check_update"
+            app:title="检查更新"
+            app:summary="当前版本1.0.0"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            app:key="@string/settings_more_suggesttions"
+            app:title="意见反馈"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

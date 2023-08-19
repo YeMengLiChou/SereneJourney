@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<PreferenceCategory
+    app:title="账号管理"
+    app:iconSpaceReserved="false">
+
+    <SwitchPreference
+        android:key="@string/settings_account_auto_login"
+        app:icon="@drawable/settings_ic_user"
+        app:title="自动登录"
+        app:summary="下次自动登录"
+        android:persistent="true"/>
+
+    <Preference
+        android:key="@string/settings_account_modify"
+        app:title="修改信息"/>
+
+
+    <Preference
+        android:key="@string/settings_account_logout"
+        app:title="退出登录"/>
+</PreferenceCategory>
+</PreferenceScreen>

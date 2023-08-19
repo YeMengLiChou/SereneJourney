@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_account">settings_account</string>
+    <string name="settings_account_auto_login">settings_account_auto_login</string>
+
+    <string name="settings_picture_save_path">settings_picture_save_path</string>
+    <string name="settings_picture_clear_cache">settings_picture_clear_cache</string>
+
+    <string name="settings_custom_theme">settings_custom_theme</string>
+
+    <string name="settings_more_check_update">settings_more_check_update</string>
+    <string name="settings_more_suggesttions">settings_more_suggesttions</string>
+
+    <string name="settings_fragment_account">com.sll.mod_settings.ui.preference.PreferenceAccountFragment</string>
+    <string name="settings_account_modify">settings_account_modify</string>
+    <string name="settings_account_logout">settings_account_logout</string>
+</resources>
