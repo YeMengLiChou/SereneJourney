@@ -4,14 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sll.lib_common.entity.dto.ImageShare
-import com.sll.lib_common.entity.dto.Paging
+import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_network.manager.ApiManager
 import com.sll.lib_network.repositroy.BaseRepository
-import com.sll.lib_network.response.Response
+import com.sll.lib_network.response.Res
 import com.sll.mod_imageshare.ui.paging.ImagePagingSource
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import java.security.MessageDigest
 
 
 /**
@@ -38,17 +36,87 @@ object ImageRepository: BaseRepository() {
 //
 //    }
 
+
+    private val userId get() = ServiceManager.userService.getUserInfo()?.id ?: 0
+
     /**
      * 获取发现的图文列表
      * */
     fun fetchDiscoverImageShares(): Flow<PagingData<ImageShare>> {
         return Pager(
-            config = PagingConfig(pageSize = 15, prefetchDistance = 0),
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 15
+            ),
             pagingSourceFactory = { ImagePagingSource(ApiManager.api) }
         ).flow
     }
 
+    /**
+     * 更新信息
+     *
+     * */
+    suspend fun updateImageShareDetail(updateImageShare: ImageShare) {
+        requestResponse {
+            ApiManager.api.getShareDetail(updateImageShare.id.toLong(), userId)
+        }.collect { res ->
+            res.onSuccess { updateImageShare.update(it!!) }
+        }
+    }
+
+    /**
+     * 取消点赞
+     * @param likeId 点赞的id
+     * */
+    fun cancelLikeImageShare(likeId: String): Flow<Res<String?>> {
+        return requestResponse {
+            ApiManager.api.cancelLike(likeId)
+        }
+    }
+    /**
+     * 点赞
+     * @param shareId 图文的id
+     * */
+    fun likeImageShare(shareId: String): Flow<Res<String?>> {
+        return requestResponse {
+            ApiManager.api.likeShare(shareId, userId)
+        }
+    }
+
+    /**
+     * 取消收藏
+     * */
+    fun cancelCollectImageShare(shareId: String): Flow<Res<String?>> {
+        return requestResponse {
+            ApiManager.api.cancelCollectShare(shareId, userId)
+        }
+    }
+
+    /**
+     * 收藏
+     * */
+    fun collectImageShare(shareId: String): Flow<Res<String?>> {
+        return requestResponse {
+            ApiManager.api.collectShare(shareId, userId)
+        }
+    }
 
 
+    /**
+     * 关注
+     * */
+    fun focus(focusUserId: String): Flow<Res<String?>> {
+        return requestResponse {
+            ApiManager.api.focusUser(focusUserId, userId)
+        }
+    }
+    /**
+     * 取消关注
+     * */
+    fun cancelFocus(focusUserId: String): Flow<Res<String?>> {
+        return requestResponse {
+            ApiManager.api.cancelFocus(focusUserId, userId)
+        }
+    }
 }
 

@@ -14,17 +14,17 @@ data class ImageShare (
     // 当前图片分享的用户收藏的主键
     val collectId: String?,
     // 当前图片分享的收藏数
-    val collectNum: Int,
+    var collectNum: Int,
     // 内容
     val content: String,
     // 创建时间
     val createTime: String,
     // 是否已收藏
-    val hasCollect: Boolean,
+    var hasCollect: Boolean,
     // 是否已关注
-    val hasFocus: Boolean,
+    var hasFocus: Boolean,
     // 是否已点赞
-    val hasLike: Boolean,
+    var hasLike: Boolean,
     // 主键id
     val id: String,
     // 一组图片的唯一标识符
@@ -32,13 +32,22 @@ data class ImageShare (
     // 图片的list集合
     val imageUrlList: List<String>,
     // 当前图片分享的用户点赞的主键id
-    val likeId: String?,
+    var likeId: String?,
     // 当前图片分享的点赞数
-    val likeNum: Int,
+    var likeNum: Int,
     // 发布者id
     val pUserId: String,
     // 标题
     val title: String,
     // 发布者名字
     val username: String
-)
+) {
+    fun update(imageShare: ImageShare) {
+        hasCollect = imageShare.hasCollect
+        collectNum = imageShare.collectNum
+        hasFocus = imageShare.hasFocus
+        hasLike = imageShare.hasLike
+        likeId = imageShare.likeId
+        likeNum = imageShare.likeNum
+    }
+}

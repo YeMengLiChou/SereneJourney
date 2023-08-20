@@ -1,10 +1,10 @@
-package com.sll.mod_imageshare.vh
+package com.sll.mod_imageshare.adapter.vh
 
 import com.sll.lib_framework.base.viewholder.BaseBindViewHolder
 import com.sll.mod_image_share.databinding.IsLayoutItemFooterLoadBinding
 
 /**
- *
+ * 底部 ViewHolder
  *
  *
  * @author Gleamrise

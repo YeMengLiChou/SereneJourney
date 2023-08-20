@@ -1,19 +1,20 @@
 package com.sll.mod_imageshare.ui.item
 
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.sll.lib_common.interfaces.FragmentScrollable
 import com.sll.lib_framework.base.fragment.BaseMvvmFragment
+import com.sll.lib_framework.ext.As
 import com.sll.lib_framework.ext.launchOnCreated
-import com.sll.lib_framework.util.debug
+import com.sll.lib_framework.util.ToastUtils
 import com.sll.mod_image_share.databinding.IsFragmentDiscoverBinding
 import com.sll.mod_imageshare.adapter.DiscoverAdapter
 import com.sll.mod_imageshare.adapter.DiscoverFooterAdapter
 import com.sll.mod_imageshare.ui.vm.DiscoverViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlin.reflect.KClass
 
 /**
  *
@@ -28,7 +29,7 @@ class DiscoverFragment: BaseMvvmFragment<IsFragmentDiscoverBinding, DiscoverView
         private const val TAG = "DiscoverFragment"
     }
 
-    private lateinit var adapter: DiscoverAdapter
+    private lateinit var pagingAdapter: DiscoverAdapter
 
     override fun scrollToTop() {
 
@@ -47,29 +48,54 @@ class DiscoverFragment: BaseMvvmFragment<IsFragmentDiscoverBinding, DiscoverView
     }
 
     override fun onDefCreateView() {
-        initViewPager2()
+        initRecyclerView()
     }
 
     override fun initViewBinding(container: ViewGroup?) = IsFragmentDiscoverBinding.inflate(layoutInflater)
 
     override fun getViewModelClass() = DiscoverViewModel::class
 
-    private fun initViewPager2() {
+    private fun initRecyclerView() {
         launchOnCreated {
-            adapter = DiscoverAdapter(requireContext())
-            binding.isViewpager2Content.layoutManager = LinearLayoutManager(requireContext()).apply { orientation = LinearLayoutManager.VERTICAL }
-            binding.isViewpager2Content.adapter = adapter.withLoadStateFooter(DiscoverFooterAdapter(requireContext()) {
-                adapter.retry()
+            // 获取数据源
+            pagingAdapter = DiscoverAdapter(requireContext(), requireActivity().lifecycleScope).apply {
+                addLoadStateListener {
+                    when (it.refresh) {
+                        is LoadState.Loading -> {
+                            binding.isSwipeRefreshContent.isRefreshing = true
+                        }
+                        is LoadState.NotLoading -> {
+                            binding.isSwipeRefreshContent.isRefreshing = false
+                        }
+                        is LoadState.Error -> {
+                            binding.isSwipeRefreshContent.isRefreshing = false
+                            ToastUtils.error("加载失败: ${(it.refresh as LoadState.Error).error.message}")
+                        }
+                    }
+                }
+            }
+            // 线性布局
+            binding.isRecyclerViewContent.layoutManager = LinearLayoutManager(requireContext()).apply { orientation = LinearLayoutManager.VERTICAL }
+            binding.isRecyclerViewContent.adapter = pagingAdapter.withLoadStateFooter(DiscoverFooterAdapter(requireContext()) {
+                pagingAdapter.retry()
             })
-            //下拉刷新
-            binding.isSwipeRefreshContent.setOnRefreshListener {
-                adapter.refresh()
-            }
-            viewModel.fetchDiscoverImageShares().collectLatest {
-                adapter.submitData(it)
-            }
+            // 取消动画，解决闪烁问题
+            binding.isRecyclerViewContent.itemAnimator?.As<SimpleItemAnimator>()?.supportsChangeAnimations = false
 
+            // 下拉刷新
+            binding.isSwipeRefreshContent.setOnRefreshListener {
+                pagingAdapter.refresh()
+            }
+            // 更新数据
+            viewModel.fetchDiscoverImageShares().collectLatest {
+                pagingAdapter.submitData(it)
+            }
         }
+
+
+
+
+
     }
 
 

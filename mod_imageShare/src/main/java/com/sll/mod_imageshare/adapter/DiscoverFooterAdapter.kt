@@ -10,7 +10,7 @@ import com.sll.lib_framework.ext.view.gone
 import com.sll.lib_framework.ext.view.visible
 import com.sll.mod_image_share.databinding.IsLayoutItemFooterLoadBinding
 import com.sll.mod_image_share.databinding.IsLayoutItemImageShareBinding
-import com.sll.mod_imageshare.vh.FooterViewHolder
+import com.sll.mod_imageshare.adapter.vh.FooterViewHolder
 
 /**
  *
@@ -28,6 +28,7 @@ class DiscoverFooterAdapter(
     }
 
     override fun onBindViewHolder(holder: FooterViewHolder, loadState: LoadState) {
+        // 根据不同的加载状态展现不同的视图
         holder.apply {
             when (loadState) {
                 is LoadState.Error -> {

@@ -12,7 +12,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/is_viewpager2_content"
+            android:id="@+id/is_recyclerView_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginVertical="8dp"
