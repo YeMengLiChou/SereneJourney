@@ -27,5 +27,9 @@ object ServiceManager {
         TheRouter.get(IUserService::class.java)!!
     }
 
+    val isService: IImageShareService by lazy {
+        TheRouter.get(IImageShareService::class.java)!!
+    }
+
 
 }
