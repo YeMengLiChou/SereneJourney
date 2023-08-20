@@ -289,10 +289,13 @@ object FileUtils {
         bitmap: Bitmap,
         prefix: String = "",
         format: CompressFormat = CompressFormat.JPEG,
-        savePath: String? = null,
+        savePath: String = DEFAULT_SAVE_PATH,
     ): Uri? {
+        // 后缀名
         val suffix = format.toString()
+        // 文件名
         val filename = "$prefix-${System.currentTimeMillis()}.$suffix"
+
         val values = ContentValues().apply {
             // 文件类型
             put(MediaStore.Images.Media.MIME_TYPE, "image/$suffix")
@@ -300,12 +303,13 @@ object FileUtils {
             put(MediaStore.Images.Media.DISPLAY_NAME, filename)
             // 存放路径
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, savePath ?: DEFAULT_SAVE_PATH)
+                // Android 10 及以上不再使用 DATA 字段，使用相对路径
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/Save")
             } else {
                 // Android 10 以下没有分区存储
                 put(
                     MediaStore.MediaColumns.DATA,
-                    "${(savePath ?: DEFAULT_SAVE_PATH)}${File.separator}${prefix}-${System.currentTimeMillis()}.$suffix"
+                    "${(savePath)}${File.separator}${prefix}-${System.currentTimeMillis()}.$suffix"
                 )
             }
         }
@@ -382,7 +386,6 @@ object FileUtils {
             cameraCallback?.invoke(bitmap, if (bitmap == null) State.ERROR_TAKE else State.SUCCESS)
             if (bitmap != null) {
                 if (needCrop) {
-
                     val uri = saveImage(activity, bitmap, "crop") ?: kotlin.run {
                         buildCallback?.invoke(null, State.ERROR_SAVE)
                         return@registerForActivityResult

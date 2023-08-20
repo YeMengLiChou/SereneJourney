@@ -14,13 +14,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
 import com.sll.lib_common.service.ServiceManager
-import com.sll.lib_framework.manager.KvManager
 import com.sll.lib_framework.util.FileUtils
 import com.sll.lib_framework.util.debug
 import com.sll.lib_glide.transformation.BlendColorTransformation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -74,8 +76,6 @@ fun Target<Drawable>.setAvatar(context: Context, url: String?) {
 }
 
 
-
-
 /**
  * 设置本地图片作为背景图
  * @param uri
@@ -84,7 +84,7 @@ inline fun ImageView.setLocalBackground(
     uri: Uri?,
     crossinline callback: (res: Drawable?) -> Unit = {}
 ) {
-  val a =   Glide.with(this).load(uri)
+    val a = Glide.with(this).load(uri)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE) // 保存裁剪过的数据，因为是本地数据
         .transform(BlendColorTransformation(Color.parseColor("#D0D0D0")))
         .listener(object : RequestListener<Drawable> {
@@ -148,21 +148,45 @@ inline fun ImageView.setRemoteBackground(
 }
 
 
-
 /**
  * 保存指定 url 到本地
  * */
 fun downloadOriginPictures(
     context: Context,
     url: String,
-    path: String,
+    path: String = ServiceManager.settingService.getPicturesSavePath(), // 默认使用保存的
     callback: (uri: Uri?) -> Unit
 ) {
-    val bitmap = Glide.with(context)
-        .load(url)
-        .submit()
-        .get(10, TimeUnit.SECONDS)
-        .toBitmap()
-    callback(FileUtils.saveImage(context, bitmap, path))
+    // 需要在 IO 线程执行
+    CoroutineScope(Dispatchers.IO).launch {
+        val bitmap = withContext(Dispatchers.IO) {
+            Glide.with(context)
+                .load(url)
+                .submit()
+                .get(10, TimeUnit.SECONDS)
+        }.toBitmap()
+        callback(
+            FileUtils.saveImage(
+                context,
+                bitmap,
+                prefix = "save",
+                format = Bitmap.CompressFormat.PNG,
+                ServiceManager.settingService.getPicturesSavePath()
+            )
+        )
+    }
 }
 
+/**
+ * 设置远程图片，不缓存在本地
+ *
+ * */
+fun ImageView.setRemoteImage(
+    url: String
+) {
+    Glide.with(this)
+        .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .error(R.drawable.common_holder_error)
+        .placeholder(R.drawable.common_anim_loading).into(this)
+}
