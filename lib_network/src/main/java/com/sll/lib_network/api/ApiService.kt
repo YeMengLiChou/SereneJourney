@@ -8,26 +8,18 @@ import com.sll.lib_common.entity.dto.User
 import com.sll.lib_network.api.params.ShareParam
 import com.sll.lib_network.api.params.CommentParam
 import com.sll.lib_network.api.params.EditParam
-import com.sll.lib_network.api.params.FocusParam
 import com.sll.lib_network.api.params.SecondCommentParam
-import com.sll.lib_network.api.params.UserInfoParam
 import com.sll.lib_network.api.params.UserParam
 import com.sll.lib_network.response.Response
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.PartMap
 import retrofit2.http.Query
-import retrofit2.http.QueryMap
-import retrofit2.http.Url
 
 /**
  *
@@ -59,7 +51,8 @@ interface ApiService {
      * */
     @POST("collect")
     suspend fun collectShare(
-        @Body param: ShareParam
+        @Query("shareId") shareId: String,
+        @Query("userId") userId: Long
     ): Response<String>
 
 
@@ -70,7 +63,8 @@ interface ApiService {
      * */
     @POST("collect/cancel")
     suspend fun cancelCollectShare(
-        @Body param: ShareParam
+        @Query("shareId") shareId: String,
+        @Query("userId") userId: Long
     ): Response<String>
 
 
@@ -156,7 +150,8 @@ interface ApiService {
      * */
     @POST("focus")
     suspend fun focusUser(
-        @Body param: FocusParam
+        @Query("focusUserId") focusUserId: String,
+        @Query("userId") userId: Long
     ): Response<String>
 
 
@@ -167,7 +162,8 @@ interface ApiService {
      */
     @POST("focus/cancel")
     suspend fun cancelFocus(
-        @Body param: FocusParam
+        @Query("focusUserId") focusUserId: String,
+        @Query("userId") userId: Long
     ): Response<String>
 
 
@@ -200,9 +196,10 @@ interface ApiService {
      * @param userId 当前登录用户的id
      */
     @POST("like")
-    @Headers("Content-Type", "application/json")
+    @Headers("Content-Type: application/json")
     suspend fun likeShare(
-        @Body param: ShareParam
+        @Query("shareId") shareId: String,
+        @Query("userId") userId: Long,
     ): Response<String>
 
 
@@ -213,7 +210,7 @@ interface ApiService {
     @POST("like/cancel")
     @Headers("Content-Type: application/json")
     suspend fun cancelLike(
-        @Body likeId: Long
+        @Query("likeId") likeId: String
     ): Response<String>
 
 
@@ -365,14 +362,5 @@ interface ApiService {
         @Body param: RequestBody
     ): Response<String>
 
-
-    /**
-     * 图片下载
-     * @param url 图片地址
-     * */
-    @GET
-    suspend fun downloadImage(
-        @Url url: String
-    ): ResponseBody
 }
 

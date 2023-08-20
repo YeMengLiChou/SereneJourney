@@ -28,6 +28,7 @@ class SJApplication : Application() {
 
         TaskDispatcher.createInstance()
             .addTask(InitAppHelperTask(this, isDebug))
+            .addTask(InitSystemBarUtilsTask(this))
             .addTask(InitUtilstTask(this))
             .addTask(InitAppManagersTask(this))
             .addTask(InitKvManagerTask(this, mutableListOf(UserEncoder, LoginInfoEncoder)))

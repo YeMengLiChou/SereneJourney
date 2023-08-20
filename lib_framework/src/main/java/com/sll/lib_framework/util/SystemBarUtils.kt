@@ -63,9 +63,9 @@ object SystemBarUtils {
 
     // 检查初始化
     private fun checkInitialized() {
-//        check(initialized) {
-//            "You need initialize SystemBarUtils first!"
-//        }
+        check(initialized) {
+            "You need initialize SystemBarUtils first!"
+        }
     }
 
     @RequiresApi(21)

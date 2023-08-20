@@ -221,8 +221,15 @@ object ToastUtils {
             cancel()
             toast = null
         }
-
-        Toast.makeText(mContext, msg, duration).show()
+        // 不是主线程使用会报错： java.lang.NoClassDefFoundError: com.sll.lib_framework.util.ToastUtils
+        // 需要下面的判断
+        if (!Looper.getMainLooper().isCurrentThread) {
+            Looper.prepare()
+            Toast.makeText(mContext, msg, duration).show()
+            Looper.loop()
+        } else {
+            Toast.makeText(mContext, msg, duration).show()
+        }
 //        mToastHandler.postDelayed({
 //            try {
 //                binding.frameworkTvToastContent.apply {

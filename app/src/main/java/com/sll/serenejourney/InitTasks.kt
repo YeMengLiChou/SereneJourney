@@ -25,6 +25,13 @@ class InitUtilstTask(
 ) : Task() {
     override fun run() {
         ToastUtils.init(application)
+    }
+}
+
+class InitSystemBarUtilsTask(
+    private val application: Application
+): Task() {
+    override fun run() {
         SystemBarUtils.init(application)
     }
 }
