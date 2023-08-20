@@ -23,14 +23,17 @@ const val KEY_DRAWER_BACKGROUND_FROM_REMOTE = "drawer_background_from_remote"
 const val KEY_DRAWER_BACKGROUND_PATH = "drawer_background_path"
 
 
-// 抽屉背景图像更新时间 Long
+// 主页背景图像更新时间 Long
 const val KEY_MAIN_BACKGROUND_UPDATE_TIME = "main_background_update_time"
 
-// 抽屉背景图像是否为本地图， Boolean
+// 主页背景图像是否为本地图， Boolean
 const val KEY_MAIN_BACKGROUND_FROM_REMOTE = "main_background_from_remote"
 
-// 抽屉背景图像路径， String
+// 主页背景图像路径， String
 const val KEY_MAIN_BACKGROUND_PATH = "main_background_path"
+
+// 图片保存路径
+const val KEY_PICTURE_SAVE_PATH = "pictures_save_path"
 
 
 // ========================== 夜间模式 =======================================

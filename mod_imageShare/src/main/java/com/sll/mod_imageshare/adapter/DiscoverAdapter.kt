@@ -18,14 +18,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.button.MaterialButton
 import com.sll.lib_common.entity.dto.ImageShare
 import com.sll.lib_common.service.ServiceManager
+import com.sll.lib_common.setRemoteImage
 import com.sll.lib_framework.base.viewholder.BaseBindViewHolder
 import com.sll.lib_framework.ext.dp
 import com.sll.lib_framework.ext.fromHtml
 import com.sll.lib_framework.ext.res.color
 import com.sll.lib_framework.ext.res.drawable
+import com.sll.lib_framework.ext.view.click
 import com.sll.lib_framework.ext.view.setClipViewCornerRadius
 import com.sll.lib_framework.manager.AppManager
 import com.sll.lib_framework.util.ToastUtils
+import com.sll.lib_framework.util.debug
 import com.sll.mod_image_share.R
 import com.sll.mod_image_share.databinding.IsLayoutItemImageShareBinding
 import com.sll.mod_imageshare.repository.ImageRepository
@@ -42,7 +45,8 @@ import java.util.*
  */
 class DiscoverAdapter(
     private val context: Context,
-    private val scope: LifecycleCoroutineScope
+    private val scope: LifecycleCoroutineScope,
+    private val click: (view: ImageView, item: ImageShare, position: Int) -> Unit
 ) : PagingDataAdapter<ImageShare, DiscoverAdapter.DiscoverViewHolder>(comparator) {
     companion object {
         private const val TAG = "DiscoverAdapter"
@@ -63,7 +67,7 @@ class DiscoverAdapter(
     // 屏幕宽度 - 两侧外边距 - 项之间的边距
     private val columnWidth = (AppManager.screenWidthPx - (16 * 2).dp - (8 * 2).dp) / 3
 
-    private val dp4 = 4.dp
+    private val dp8 = 8.dp
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
@@ -98,22 +102,20 @@ class DiscoverAdapter(
             }
             val ids = IntArray(size)
             for (i in 0 until size) {
-                ids[i] = initImageView(item.imageUrlList[i], root)
+                ids[i] = initImageView(item.imageUrlList[i], root,  position, i)
             }
             isFlowImages.referencedIds = ids
 
-            // 关注
-            if (item.hasFocus) {
-                // TODO 填充
-                isBtFocus.text = "已关注"
-            } else {
-                isBtFocus.text = "关注"
-            }
 
+            /**
+             * TODO: Bug 快速点击点赞或收藏会导致状态不同步，尚未找出原因
+             *
+             * */
             // 关注点击
             switchFocusStyle(item.hasFocus, isBtFocus)
             isBtFocus.setOnClickListener(object : View.OnClickListener {
                 var isFocus = item.hasFocus
+
                 // 处理收藏的网络请求
                 val handler = object : Handler(Looper.myLooper() ?: Looper.getMainLooper()) {
                     override fun handleMessage(msg: Message) {
@@ -172,6 +174,7 @@ class DiscoverAdapter(
             switchCollectStyle(item.hasCollect, item, isBtCollect)
             isBtCollect.setOnClickListener(object : View.OnClickListener {
                 var isCollect = item.hasCollect
+
                 // 处理收藏的网络请求
                 val handler = object : Handler(Looper.myLooper() ?: Looper.getMainLooper()) {
                     override fun handleMessage(msg: Message) {
@@ -208,7 +211,7 @@ class DiscoverAdapter(
                 override fun onClick(v: View?) {
                     isCollect = !isCollect // 切换点赞
                     item.collectNum = if (isCollect) item.collectNum + 1 else item.collectNum - 1
-                    switchLikeStyle(isCollect, item, isBtCollect)
+                    switchCollectStyle(isCollect, item, isBtCollect)
                     if (ServiceManager.loginService.isLogin()) { // 先切换图标，延迟发送网络请求，防止多次点击
                         handler.removeMessages(100)
                         handler.sendEmptyMessageDelayed(100, 500L) // 延迟发送
@@ -222,6 +225,7 @@ class DiscoverAdapter(
             switchLikeStyle(item.hasLike, item, isBtLike)
             isBtLike.setOnClickListener(object : View.OnClickListener {
                 var isLiked = item.hasLike
+
                 // 处理点赞的网络请求
                 val handler = object : Handler(Looper.myLooper() ?: Looper.getMainLooper()) {
                     override fun handleMessage(msg: Message) {
@@ -230,7 +234,9 @@ class DiscoverAdapter(
                             if (isLiked && !item.hasLike) {
                                 ImageRepository.likeImageShare(item.id).collect { res ->
                                     res.onSuccess {
-                                        scope.launch { ImageRepository.updateImageShareDetail(item) } // 更新数据
+                                        scope.launch {
+                                            ImageRepository.updateImageShareDetail(item)
+                                        } // 更新数据
                                     }.onError { // 失败后恢复原状
                                         ToastUtils.warn("点赞失败:${it.message}")
                                         isLiked = item.hasLike
@@ -243,7 +249,9 @@ class DiscoverAdapter(
                             if (!isLiked && item.hasLike) {
                                 ImageRepository.cancelLikeImageShare(item.likeId!!).collect { res ->
                                     res.onSuccess {
-                                        scope.launch { ImageRepository.updateImageShareDetail(item) } // 更新数据
+                                        scope.launch {
+                                            ImageRepository.updateImageShareDetail(item)
+                                        } // 更新数据
                                     }.onError {
                                         ToastUtils.warn("取消点赞失败:${it.message}")
                                         isLiked = item.hasLike
@@ -281,21 +289,30 @@ class DiscoverAdapter(
         )
     }
 
-    private fun initImageView(url: String, layout: ConstraintLayout): Int {
+
+    /**
+     * 对每个 url 设置一个 ImageView
+     * @param url
+     * @param layout
+     * @param position
+     * @param urlPosition
+     * */
+    private fun initImageView(url: String, layout: ConstraintLayout, position: Int, urlPosition: Int): Int {
         val iv = ImageView(context).apply {
             scaleType = ImageView.ScaleType.CENTER_CROP
-            layoutParams = ViewGroup.LayoutParams(columnWidth, columnWidth)
-            setClipViewCornerRadius(dp4)
-            id = View.generateViewId()
-            background = ContextCompat.getDrawable(context, R.drawable.is_ripple_imageview_pressed)
+            layoutParams = ViewGroup.LayoutParams(columnWidth, columnWidth) // 大小
+            setClipViewCornerRadius(dp8) // 设置圆角
+            id = View.generateViewId() // 生成一个 id，与 Flow 绑定
+            foreground = ContextCompat.getDrawable(context, R.drawable.is_ripple_imageview_pressed)
             isClickable = true
             isFocusable = true
-            layout.addView(this)
+            elevation = 3F // 给一部分阴影
+            click { // 点击后触发外部的点击事件
+                click.invoke(it as ImageView, getItem(position)!!, urlPosition)
+            }
+            setRemoteImage(url) // 加载 url
+            layout.addView(this) // 加入布局
         }
-        Glide.with(context).load(url)
-            .error(R.color.is_gray_dim)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .into(iv)
         return iv.id
     }
 

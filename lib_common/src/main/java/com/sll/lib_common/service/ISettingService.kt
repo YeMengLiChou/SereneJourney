@@ -86,7 +86,7 @@ interface ISettingService {
     /**
      * 获取全局保存路径
      * */
-    fun getPicturesSavePath(): String?
+    fun getPicturesSavePath(): String
 
      /**
      * 设置全局保存路径
