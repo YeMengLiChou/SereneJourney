@@ -221,6 +221,7 @@ object ToastUtils {
             cancel()
             toast = null
         }
+
         Toast.makeText(mContext, msg, duration).show()
 //        mToastHandler.postDelayed({
 //            try {

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.net.Uri
@@ -15,14 +14,14 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
 import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import com.sll.lib_framework.manager.FileManager
-import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -35,6 +34,7 @@ import java.math.RoundingMode
  */
 object FileUtils {
     private const val TAG = "FileUtils"
+
     // 包名
     private var PACKAGE_NAME = "com.sll.serenejourney"
 
@@ -43,6 +43,7 @@ object FileUtils {
 
     // 媒体模块存储路径
     private val DIR_SAVE_MEDIA: String = "$DIR_SAVE_MEDIA_ROOT/serenejourney"
+
 
     // 头像保存路径
     private const val DIR_AVATAR = "/avatar"
@@ -96,6 +97,52 @@ object FileUtils {
 //        return path?.let { getUriFromFile(context, File(it)) }
 //    }
 
+
+    /**
+     * 选择一个外部文件
+     * @return intent
+     * */
+    fun pickExternalFile(): Intent {
+        return Intent(Intent.ACTION_GET_CONTENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+            Intent.createChooser(this, "选择文件")
+        }
+    }
+
+    /**
+     * 将外部文件的 uri 复制到私有目录
+     *
+     * Android 11开始只能在私有目录或者共享目录创建文件
+     * @param context
+     * @param srcUri 源文件的uri
+     * @param dstFolder 私有目录的文件夹名称
+     * */
+    fun copyUriToInnerStorage(context: Context, srcUri: Uri, dstFolder: String, dstFile: String): File {
+        val folder = File(dstFolder)
+        val exist = if (!folder.exists()) folder.mkdirs() else true
+        val file = File(dstFolder, dstFile)
+        if (exist) {
+            if (file.exists()) file.delete()
+            context.contentResolver.openInputStream(srcUri).use {
+                try {
+                    val fileOutputStream = FileOutputStream(file)
+                    val buffer = ByteArray(1024)
+                    var readCount = it?.read(buffer) ?: -1
+                    while (readCount >= 0) {
+                        fileOutputStream.write(buffer, 0, readCount)
+                        readCount = it?.read(buffer) ?: -1
+                    }
+                    fileOutputStream.flush()
+                    fileOutputStream.fd.sync()
+                    fileOutputStream.close()
+                } catch (e: IOException) {
+                    Log.e(TAG, "copyUriToInnerStorage: $e")
+                }
+            }
+        }
+        return file
+    }
 
 
     // =========================== 文件大小相关 ============================
@@ -167,7 +214,6 @@ object FileUtils {
     }
 
 
-
     // =========================== 删除文件 =================================
 
 
@@ -208,10 +254,10 @@ object FileUtils {
         var temp: File?
         for (i in tempList.indices) {
             temp = if (path.endsWith(File.separator)) {
-                    File(path + tempList[i])
-                } else {
-                    File(path + File.separator + tempList[i])
-                }
+                File(path + tempList[i])
+            } else {
+                File(path + File.separator + tempList[i])
+            }
             // 文件删除
             if (temp.isFile) {
                 temp.delete()
@@ -226,8 +272,6 @@ object FileUtils {
         }
         return flag
     }
-
-
 
 
     // =========================== 图片相关 =================================
@@ -306,7 +350,7 @@ object FileUtils {
     }
 
     /**
-     * 照片请求，可以通过 [camera] 或者 [select] 选取一张图片
+     * 照片请求，可以通过 [camera] 或者 [pick] 选取一张图片
      * */
     class PhotoRequest(private val activity: AppCompatActivity) : Fragment() {
 
@@ -338,6 +382,7 @@ object FileUtils {
             cameraCallback?.invoke(bitmap, if (bitmap == null) State.ERROR_TAKE else State.SUCCESS)
             if (bitmap != null) {
                 if (needCrop) {
+
                     val uri = saveImage(activity, bitmap, "crop") ?: kotlin.run {
                         buildCallback?.invoke(null, State.ERROR_SAVE)
                         return@registerForActivityResult
@@ -374,8 +419,18 @@ object FileUtils {
         private val cropLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { cropData ->
             if (cropData.resultCode == Activity.RESULT_OK) {
                 val resUri = cropData?.data?.data
-                buildCallback?.invoke(resUri, if (resUri != null) State.SUCCESS else State.ERROR_CROP) // 裁剪回调
-            } else if (cropData.resultCode == Activity.RESULT_CANCELED ){
+                // TODO 转存到私有目录
+                val copy = resUri?.run {
+                    copyUriToInnerStorage(
+                        requireContext(),
+                        resUri,
+                        "${requireContext().getExternalFilesDir(null)}${File.separator}Crop",
+                        "crop-${System.currentTimeMillis()}.${cropOption?.outputFormat}"
+                    ).toUri()
+                }
+                resUri?.toFile()?.delete() //删除该裁剪文件
+                buildCallback?.invoke(copy, if (copy != null) State.SUCCESS else State.ERROR_CROP) // 裁剪回调
+            } else if (cropData.resultCode == Activity.RESULT_CANCELED) {
                 buildCallback?.invoke(null, State.CANCEL_CROP) // 取消裁剪
             }
         }
@@ -416,13 +471,13 @@ object FileUtils {
          * 相册选择图片
          * @param callback 选择图片后的回调
          * */
-        fun select(callback: ((uri: Uri?, state: Int) -> Unit)? = null): PhotoRequest {
+        fun pick(callback: ((uri: Uri?, state: Int) -> Unit)? = null): PhotoRequest {
             this.fromSelected = true
             this.selectCallback = callback
             return this
         }
 
-         /**
+        /**
          * 开始
          * @param callback 回调
          * */
@@ -461,7 +516,7 @@ object FileUtils {
             activity.supportFragmentManager.commit {
                 remove(this@PhotoRequest)
             }
-            tmpUri?.toFile()?.delete()
+//            tmpUri?.toFile()?.delete()
         }
 
 
@@ -587,6 +642,7 @@ object FileUtils {
                 return this
             }
         }
+
         // 回调的状态
         object State {
             // 成功

@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Color
 import android.hardware.input.InputManager
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -28,10 +29,12 @@ import kotlin.math.abs
  */
 @SuppressLint("ObsoleteSdkInt")
 object SystemBarUtils {
+    private const val TAG = "SystemBarUtils"
     // 未初始化的标识
     private const val NOT_INITIALIZED = -1
 
     // 是否已经初始化
+    @Volatile
     private var initialized = false
 
     private lateinit var application: Application
@@ -54,14 +57,15 @@ object SystemBarUtils {
     fun init(application: Application) {
         this.application = application
         this.initialized = true
+        Log.i(TAG, "$TAG init")
     }
 
 
     // 检查初始化
     private fun checkInitialized() {
-        check(initialized) {
-            "You need initialize SystemBarUtils first!"
-        }
+//        check(initialized) {
+//            "You need initialize SystemBarUtils first!"
+//        }
     }
 
     @RequiresApi(21)
