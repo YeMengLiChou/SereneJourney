@@ -1,6 +1,15 @@
 package com.sll.mod_imageshare.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.sll.lib_common.entity.dto.ImageShare
+import com.sll.lib_common.entity.dto.Paging
+import com.sll.lib_network.manager.ApiManager
 import com.sll.lib_network.repositroy.BaseRepository
+import com.sll.lib_network.response.Response
+import com.sll.mod_imageshare.ui.paging.ImagePagingSource
+import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import java.security.MessageDigest
 
@@ -28,6 +37,16 @@ object ImageRepository: BaseRepository() {
 //    suspend fun downloadImage(url: String, path: String): ResponseBody {
 //
 //    }
+
+    /**
+     * 获取发现的图文列表
+     * */
+    fun fetchDiscoverImageShares(): Flow<PagingData<ImageShare>> {
+        return Pager(
+            config = PagingConfig(pageSize = 15, prefetchDistance = 0),
+            pagingSourceFactory = { ImagePagingSource(ApiManager.api) }
+        ).flow
+    }
 
 
 

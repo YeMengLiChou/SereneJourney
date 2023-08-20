@@ -3,7 +3,7 @@ package com.sll.mod_main.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.sll.lib_common.interfaces.FragmentScrollable
 import com.sll.lib_framework.base.adapter.BaseRecyclerAdapter
 import com.sll.lib_framework.base.fragment.BaseBindingFragment
 import com.sll.lib_framework.base.viewholder.BaseBindViewHolder
@@ -11,12 +11,8 @@ import com.sll.lib_framework.base.viewholder.BaseViewHolder
 import com.sll.lib_framework.ext.uncheckAs
 import com.sll.lib_framework.ext.view.ScrollDistance
 import com.sll.lib_framework.ext.view.checkReachTop
-import com.sll.lib_framework.ext.view.scrollDistance
-import com.sll.lib_framework.util.LogUtils
 import com.sll.mod_main.databinding.MainFragmentTestBinding
 import com.sll.mod_main.databinding.MainTabIconTitleBinding
-import com.sll.mod_main.ui.interfaces.FragmentScrollable
-import kotlin.properties.Delegates
 
 /**
  *

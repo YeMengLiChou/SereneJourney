@@ -32,6 +32,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sll.lib_common.entity.dto.User
+import com.sll.lib_common.interfaces.FragmentScrollable
 import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_common.setAvatar
 import com.sll.lib_common.setLocalBackground
@@ -64,7 +65,6 @@ import com.sll.mod_main.TestActivity
 import com.sll.mod_main.databinding.MainActivityMainBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerHeaderBinding
-import com.sll.mod_main.ui.interfaces.FragmentScrollable
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -80,22 +80,15 @@ import kotlin.reflect.KClass
  */
 class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() {
 
-    private val tabTexts = listOf("发现", "收藏", "关注", "点赞")
+    private val tabTexts = listOf("发现", "关注")
 
     private val tabIcons = listOf(
         R.drawable.main_ic_discover,
-        R.drawable.main_ic_collect,
         R.drawable.main_ic_focus,
-        R.drawable.main_ic_like,
     )
 
     // TODO: 保存 fragments 的状态
-    private val fragments = listOf<Fragment>(
-        TestFragment().setPosition(0),
-        TestFragment().setPosition(1),
-        TestFragment().setPosition(2),
-        TestFragment().setPosition(3),
-    )
+    private val fragments = mutableListOf<Fragment>()
 
     // drawer的布局
     private lateinit var headerBinding: MainLayoutDrawerHeaderBinding
@@ -110,6 +103,9 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
 
     override fun onDefCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+        fragments.add(ServiceManager.isService.navigateDiscoverFragment())
+        fragments.add(TestFragment().setPosition(1))
+
         initMainUI()
         initDrawerUI()
         fitSystemBar()
@@ -180,11 +176,11 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                 }
 
                 R.id.main_item_download -> {
-                    // 下载
+                    // TODO 下载
                 }
 
                 R.id.main_item_custom -> {
-                    selectMainCustomBackground()
+                    selectMainCustomBackground() // 自定义配图
                 }
 
                 R.id.main_item_suggestion -> {
@@ -231,7 +227,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                     translationY = totalScrollRange.shr(1) * (rate - 1)
                 }
                 // tabLayout 向右位移给出现的图标腾出位置
-                val offset = binding.btDrawerMenu.marginWidth * (1 - rate)
+                val offset = binding.btDrawerMenu.width * (1 - rate)
                 binding.tabLayout.apply {
                     translationX = offset
                     setPadding(0, 0, offset.toInt(), 0) // TabLayout 整体已经超出布局，后面的 tab 无法看到，因此需要对应的 paddingEnd

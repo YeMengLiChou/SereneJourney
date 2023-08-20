@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.activity.ktx)
     implementation(libs.fragment.ktx)
     implementation(libs.okhttp)
+    implementation(libs.paging3)
 //    ksp(libs.lifecycle.compiler)
 
     implementation(libs.bundles.viewModel)
@@ -85,6 +86,7 @@ dependencies {
     implementation(project(":lib_common"))
     implementation(project(":lib_network"))
     implementation(project(":lib_room"))
+    implementation(project(":lib_glide"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

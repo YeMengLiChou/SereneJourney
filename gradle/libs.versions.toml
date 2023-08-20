@@ -129,6 +129,7 @@ okhttp-logging-interceptor    = { group = "com.squareup.okhttp3", name = "loggin
 
 # fastKv
 fastKv                        = { group = "io.github.billywei01", name = "fastkv", version.ref = "fastKv" }
+
 # xlog
 xlog                          = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 

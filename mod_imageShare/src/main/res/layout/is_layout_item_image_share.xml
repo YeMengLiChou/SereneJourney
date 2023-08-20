@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:padding="16dp"
+    android:background="@color/is_white">
+
+    <TextView
+        android:id="@+id/is_publisher_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="username" />
+
+    <TextView
+        android:id="@+id/is_publish_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/is_publisher_name"
+        tools:text="time" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/is_focus"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_margin="8dp"
+        android:background="@color/is_transparent"
+        android:text="关注"
+        android:textColor="@color/is_blue_cornflower"
+        android:textSize="16sp"
+        app:cornerRadius="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/is_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/is_blue_cornflower"
+        app:strokeWidth="1dp" />
+
+    <TextView
+        android:id="@+id/is_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="20sp"
+        android:textColor="@color/is_black"
+        tools:text="title"
+        app:layout_constraintTop_toBottomOf="@id/is_publish_time"
+        app:layout_constraintBottom_toTopOf="@id/is_content"/>
+
+    <TextView
+        android:id="@+id/is_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:maxHeight="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/is_title"
+        tools:text="内容\n内容\n内容" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/is_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        app:flow_wrapMode="aligned"
+        app:flow_horizontalGap="8dp"
+        app:flow_verticalGap="8dp"
+        app:flow_horizontalBias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/is_content"
+        app:layout_constraintBottom_toTopOf="@id/is_bottom_bar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/is_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/is_images">
+
+
+        <LinearLayout
+            android:id="@+id/is_layout_collect"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/is_collect"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:src="@drawable/is_ic_collect" />
+
+
+            <TextView
+                android:id="@+id/is_collect_number"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                tools:text="666" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/is_layout_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+
+            <ImageView
+                android:id="@+id/is_comment"
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:src="@drawable/is_ic_comment" />
+
+
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="评论"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/is_layout_like"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/is_like"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:src="@drawable/is_ic_like" />
+
+            <TextView
+                android:id="@+id/is_like_number"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                tools:text="666" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

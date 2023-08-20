@@ -82,6 +82,7 @@
                     android:background="@android:color/transparent"
                     android:overScrollMode="always"
                     app:tabIconTint="@color/main_blue_cornflower"
+                    app:tabIndicatorColor="@color/main_blue_cornflower"
                     app:tabIndicatorFullWidth="false"
                     app:tabMode="auto"
                     app:tabRippleColor="@null" />
