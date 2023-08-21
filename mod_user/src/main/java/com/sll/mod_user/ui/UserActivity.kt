@@ -7,42 +7,36 @@ import android.transition.ChangeBounds
 import android.transition.ChangeTransform
 import android.transition.Fade
 import android.transition.TransitionSet
+import android.util.SparseArray
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayout.GRAVITY_CENTER
 import com.google.android.material.tabs.TabLayout.Tab
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sll.lib_common.constant.PATH_USER_ACTIVITY_USER
 import com.sll.lib_common.entity.dto.User
+import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_common.setAvatar
 import com.sll.lib_framework.base.activity.BaseMvvmActivity
-import com.sll.lib_framework.ext.As
+import com.sll.lib_framework.base.adapter.ViewPage2FragmentAdapter
 import com.sll.lib_framework.ext.launchOnCreated
 import com.sll.lib_framework.ext.res.color
 import com.sll.lib_framework.ext.res.drawable
-import com.sll.lib_framework.ext.res.tint
 import com.sll.lib_framework.ext.view.click
-import com.sll.lib_framework.ext.view.height
-import com.sll.lib_framework.ext.view.invisible
 import com.sll.lib_framework.ext.view.setClipViewCornerRadius
-import com.sll.lib_framework.ext.view.throttleClick
 import com.sll.lib_framework.util.SystemBarUtils
-import com.sll.lib_framework.util.debug
-import com.sll.lib_framework.widget.LAppBarLayout
 import com.sll.mod_user.R
 import com.sll.mod_user.databinding.UserActivityUserBinding
 import com.sll.mod_user.ui.modify.ModifyFragment
 import com.therouter.router.Route
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
 import kotlin.math.abs
-import kotlin.properties.Delegates
 
 /**
  *
@@ -63,10 +57,19 @@ class UserActivity : BaseMvvmActivity<UserActivityUserBinding, UserViewModel>() 
 
     private val textViews = mutableListOf<TextView>()
 
+    private val fragments = SparseArray<Fragment>(5).apply {
+        this.append(0, Fragment())
+        this.append(1, ServiceManager.isService.navigateFocusFragment(R.id.user_fragmentContainerView))
+        this.append(2, ServiceManager.isService.navigateLikeFragment(R.id.user_fragmentContainerView))
+        this.append(3, ServiceManager.isService.navigateCollectFragment(R.id.user_fragmentContainerView))
+        this.append(4, Fragment())
+    }
+
     override fun onDefCreate(savedInstanceState: Bundle?) {
         SystemBarUtils.immersiveStatusBar(this)
         initTransition()
         initTopView()
+        initViewPager2()
         initViewData()
     }
 
@@ -75,8 +78,8 @@ class UserActivity : BaseMvvmActivity<UserActivityUserBinding, UserViewModel>() 
     override fun getViewModelClass() = UserViewModel::class
 
     private fun initTransition() {
-        ViewCompat.setTransitionName(binding.userIvAvatar,"avatar")
-        ViewCompat.setTransitionName(binding.userTvUsername,"username")
+        ViewCompat.setTransitionName(binding.userIvAvatar, "avatar")
+        ViewCompat.setTransitionName(binding.userTvUsername, "username")
 
         window.enterTransition = Fade()
         window.exitTransition = Fade()
@@ -110,14 +113,6 @@ class UserActivity : BaseMvvmActivity<UserActivityUserBinding, UserViewModel>() 
                 navigateModifyFragment()
             }
 
-            // 设置 tab 标签
-            if (textViews.isEmpty()) {
-                tabTexts.forEachIndexed { position, text ->
-                    userTabLayout.addTab(userTabLayout.newTab().apply {
-                        setTabTextView(this, position)
-                    })
-                }
-            }
 
             // 设置滑动
             userAppBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -149,14 +144,19 @@ class UserActivity : BaseMvvmActivity<UserActivityUserBinding, UserViewModel>() 
                     userTabLayout.setSelectedTabIndicatorColor(Color.WHITE)
                 }
             }
-        }
 
-        binding.test.text = StringBuilder().apply {
-            repeat(100) {
-                this.append("${it}\n")
-            }
-        }
 
+        }
+    }
+
+    private fun initViewPager2() {
+        binding.apply {
+            userViewpager2Content.adapter = ViewPage2FragmentAdapter(supportFragmentManager, lifecycle, fragments)
+
+            TabLayoutMediator(userTabLayout, userViewpager2Content) { tab, position ->
+                setTabTextView(tab, position)
+            }.attach()
+        }
     }
 
     // 初始化数据
@@ -181,6 +181,7 @@ class UserActivity : BaseMvvmActivity<UserActivityUserBinding, UserViewModel>() 
                 binding.userIvAvatar.setImageDrawable(resource)
                 binding.userIvAvatarTopBar.setImageDrawable(resource)
             }
+
             override fun onLoadCleared(placeholder: Drawable?) {}
         }).setAvatar(this, user.avatar)
 
