@@ -1,7 +1,6 @@
 package com.sll.mod_imageshare.adapter
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
@@ -9,7 +8,6 @@ import com.sll.lib_framework.ext.res.layoutInflater
 import com.sll.lib_framework.ext.view.gone
 import com.sll.lib_framework.ext.view.visible
 import com.sll.mod_image_share.databinding.IsLayoutItemFooterLoadBinding
-import com.sll.mod_image_share.databinding.IsLayoutItemImageShareBinding
 import com.sll.mod_imageshare.adapter.vh.FooterViewHolder
 
 /**
@@ -19,12 +17,12 @@ import com.sll.mod_imageshare.adapter.vh.FooterViewHolder
  * @author Gleamrise
  * <br/>Created: 2023/08/20
  */
-class DiscoverFooterAdapter(
+class FooterAdapter(
     private val context: Context,
     private val retry: () -> Unit
 ): LoadStateAdapter<FooterViewHolder>() {
     companion object {
-        private const val TAG = "DiscoverFooterAdapter"
+        private const val TAG = "FooterAdapter"
     }
 
     override fun onBindViewHolder(holder: FooterViewHolder, loadState: LoadState) {

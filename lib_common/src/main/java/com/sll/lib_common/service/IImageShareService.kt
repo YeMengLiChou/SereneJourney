@@ -14,10 +14,11 @@ import androidx.fragment.app.FragmentManager
  */
 interface IImageShareService {
 
-    fun navigateDiscoverFragment(fragmentManager: FragmentManager, @IdRes containerId: Int)
+    fun navigateDiscoverFragment(@IdRes containerId: Int): Fragment
 
-    fun navigateDiscoverFragment(containerId: Int): Fragment
+    fun navigateFocusFragment(@IdRes containerId: Int): Fragment
 
+    fun navigateLikeFragment(@IdRes containerId: Int): Fragment
 
-    fun navigateFocusFragment(containerId: Int): Fragment
+    fun navigateCollectFragment(@IdRes containerId: Int): Fragment
 }

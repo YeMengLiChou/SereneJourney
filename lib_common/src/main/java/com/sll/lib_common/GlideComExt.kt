@@ -181,12 +181,13 @@ fun downloadOriginPictures(
  * 设置远程图片，不缓存在本地
  *
  * */
-fun ImageView.setRemoteImage(
-    url: String
+ fun ImageView.setRemoteImage(
+    url: String,
 ) {
     Glide.with(this)
         .load(url)
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .error(R.drawable.common_holder_error)
-        .placeholder(R.drawable.common_anim_loading).into(this)
+        .placeholder(R.drawable.common_anim_loading)
+        .into(this)
 }
