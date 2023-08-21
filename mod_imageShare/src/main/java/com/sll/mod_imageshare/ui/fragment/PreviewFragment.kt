@@ -1,10 +1,17 @@
 package com.sll.mod_imageshare.ui.fragment
 
+import android.transition.ChangeImageTransform
+import android.transition.ChangeTransform
 import android.transition.Fade
+import android.transition.TransitionSet
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.sll.lib_common.downloadOriginPictures
 import com.sll.lib_common.entity.dto.ImageShare
@@ -29,7 +36,33 @@ class PreviewFragment: BaseMvvmFragment<IsFragmentPreviewBinding, ImageShareView
     companion object {
         private const val TAG = "PreviewFragment"
 
-        const val KEY_PREVIEW_LIST = "list"
+        fun commit(
+            exitFragment: Fragment,
+            fragmentManager: FragmentManager,
+            containerId: Int,
+            imageShare: ImageShare,
+            position: Int,
+            iv: ImageView
+        ) {
+            // 过渡动画
+            ViewCompat.setTransitionName(iv, "preview")
+            exitFragment.apply {
+                exitTransition = Fade().apply { duration = 300 }
+                sharedElementEnterTransition = TransitionSet().apply {
+                    addTransition(ChangeTransform())
+                    addTransition(ChangeImageTransform())
+                }
+            }
+            fragmentManager.commit {
+                add(containerId, PreviewFragment().apply {
+                    setItemPosition(imageShare, position)
+                }, "preview")
+                addSharedElement(iv, "preview")
+                setReorderingAllowed(true)
+                addToBackStack("preview")
+            }
+
+        }
     }
 
     private var item: ImageShare? = null
@@ -69,6 +102,8 @@ class PreviewFragment: BaseMvvmFragment<IsFragmentPreviewBinding, ImageShareView
         this.currentPosition = position
         this.itemSize = item.imageUrlList.size
     }
+
+
 
     private fun initViewPager2() {
         // 更新数据

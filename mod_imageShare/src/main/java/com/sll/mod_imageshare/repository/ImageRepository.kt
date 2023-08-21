@@ -8,7 +8,10 @@ import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_network.manager.ApiManager
 import com.sll.lib_network.repositroy.BaseRepository
 import com.sll.lib_network.response.Res
-import com.sll.mod_imageshare.ui.paging.ImagePagingSource
+import com.sll.mod_imageshare.ui.paging.CollectPagingSource
+import com.sll.mod_imageshare.ui.paging.FocusPagingSource
+import com.sll.mod_imageshare.ui.paging.DiscoverPagingSource
+import com.sll.mod_imageshare.ui.paging.LikePagingSource
 import kotlinx.coroutines.flow.Flow
 
 
@@ -21,9 +24,6 @@ import kotlinx.coroutines.flow.Flow
  */
 object ImageRepository: BaseRepository() {
 
-//    fun uploadImage() {
-//        return ApiManager.api.upload()
-//    }
     /**
      * TODO： 从网络中下载下来后，针对不同的图片进行本地缓存，然后获取的图片先是从图片缓存中去找，
      *        如果不存在则重新从网络中获取
@@ -31,10 +31,6 @@ object ImageRepository: BaseRepository() {
      * 1. 发现、关注、点赞这些的图片可以不缓存在磁盘中
      * 2. 草稿、发布的内容、收藏这些图片需要缓存在磁盘中
      * */
-
-//    suspend fun downloadImage(url: String, path: String): ResponseBody {
-//
-//    }
 
 
     private val userId get() = ServiceManager.userService.getUserInfo()?.id ?: 0
@@ -48,12 +44,43 @@ object ImageRepository: BaseRepository() {
                 pageSize = 15,
                 initialLoadSize = 15
             ),
-            pagingSourceFactory = { ImagePagingSource(ApiManager.api) }
+            pagingSourceFactory = { DiscoverPagingSource(ApiManager.api) }
+        ).flow
+    }
+
+
+    fun fetchFocusImageShare(): Flow<PagingData<ImageShare>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 15
+            ),
+            pagingSourceFactory = { FocusPagingSource(ApiManager.api) }
+        ).flow
+    }
+
+    fun fetchLikeImageShare(): Flow<PagingData<ImageShare>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 15
+            ),
+            pagingSourceFactory = { LikePagingSource(ApiManager.api) }
+        ).flow
+    }
+
+    fun fetchCollectImageShare(): Flow<PagingData<ImageShare>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 15
+            ),
+            pagingSourceFactory = { CollectPagingSource(ApiManager.api) }
         ).flow
     }
 
     /**
-     * 更新信息
+     * 更新图文信息
      *
      * */
     suspend fun updateImageShareDetail(updateImageShare: ImageShare) {

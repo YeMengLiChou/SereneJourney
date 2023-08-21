@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sll.lib_common.entity.dto.ImageShare
 import com.sll.lib_common.service.ServiceManager
-import com.sll.lib_framework.util.debug
 import com.sll.lib_network.api.ApiService
 import com.sll.lib_network.error.ApiException
 import com.sll.lib_network.error.ERROR
@@ -15,13 +14,13 @@ import com.sll.lib_network.error.ExceptionHandler
  *
  *
  * @author Gleamrise
- * <br/>Created: 2023/08/19
+ * <br/>Created: 2023/08/21
  */
-class ImagePagingSource(
+class LikePagingSource(
     private val apiService: ApiService
 ): PagingSource<Int, ImageShare>() {
     companion object {
-        private const val TAG = "ImagePagingSource"
+        private const val TAG = "LikePagingSource"
     }
 
     override fun getRefreshKey(state: PagingState<Int, ImageShare>): Int? {
@@ -33,7 +32,7 @@ class ImagePagingSource(
             // 当前页号
             val page = params.key ?: 1
             // 请求内容
-            val response = apiService.listDiscoverShare(page, 15, ServiceManager.userService.getUserInfo()!!.id)
+            val response = apiService.listLikedShare(page, 15, ServiceManager.userService.getUserInfo()!!.id)
             // 分页内容
             val data = response.data?.records
             return if (data != null) {

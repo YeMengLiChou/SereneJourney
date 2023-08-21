@@ -17,9 +17,11 @@ class ImageShareViewModel: ViewModel() {
     companion object {
         private const val TAG = "ImageShareViewModel"
     }
-
-
     fun fetchDiscoverImageShares() = ImageRepository.fetchDiscoverImageShares().cachedIn(viewModelScope)
 
+    fun fetchFocusImageShares() = ImageRepository.fetchFocusImageShare().cachedIn(viewModelScope)
 
+    fun fetchLikeImageShares() = ImageRepository.fetchLikeImageShare().cachedIn(viewModelScope)
+
+    fun fetchCollectImageShares() = ImageRepository.fetchCollectImageShare().cachedIn(viewModelScope)
 }

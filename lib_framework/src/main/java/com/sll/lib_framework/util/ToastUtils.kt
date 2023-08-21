@@ -225,11 +225,12 @@ object ToastUtils {
         // 需要下面的判断
         if (!Looper.getMainLooper().isCurrentThread) {
             Looper.prepare()
-            Toast.makeText(mContext, msg, duration).show()
+            toast = Toast.makeText(mContext, msg, duration)
             Looper.loop()
         } else {
-            Toast.makeText(mContext, msg, duration).show()
+            toast = Toast.makeText(mContext, msg, duration)
         }
+        toast?.show()
 //        mToastHandler.postDelayed({
 //            try {
 //                binding.frameworkTvToastContent.apply {

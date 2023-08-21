@@ -104,7 +104,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
     override fun onDefCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         fragments.add(ServiceManager.isService.navigateDiscoverFragment(binding.mainFragmentContainerView.id))
-        fragments.add(TestFragment().setPosition(1))
+        fragments.add(ServiceManager.isService.navigateFocusFragment(binding.mainFragmentContainerView.id))
         initMainUI()
         initDrawerUI()
         fitSystemBar()
