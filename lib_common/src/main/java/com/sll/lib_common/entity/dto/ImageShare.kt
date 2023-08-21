@@ -17,7 +17,7 @@ data class ImageShare (
     // 当前图片分享的用户收藏的主键
     val collectId: String?,
     // 当前图片分享的收藏数
-    var collectNum: Int,
+    var collectNum: Int?,
     // 内容
     val content: String,
     // 创建时间
@@ -37,7 +37,7 @@ data class ImageShare (
     // 当前图片分享的用户点赞的主键id
     var likeId: String?,
     // 当前图片分享的点赞数
-    var likeNum: Int,
+    var likeNum: Int?,
     // 发布者id
     val pUserId: String,
     // 标题

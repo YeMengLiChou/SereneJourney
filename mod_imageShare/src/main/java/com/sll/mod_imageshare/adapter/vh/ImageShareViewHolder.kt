@@ -84,7 +84,8 @@ class ImageShareViewHolder(
     }
 
     fun bindData(item: ImageShare): ImageShareViewHolder {
-
+        if (item.collectNum == null) item.collectNum = 0
+        if (item.likeNum == null) item.likeNum = 0
         binding.apply {
             // 内容
             isTvContent.text = item.content
@@ -195,7 +196,7 @@ class ImageShareViewHolder(
                                     }.onError {
                                         ToastUtils.warn("收藏失败:${it.message}")
                                         isCollect = item.hasCollect
-                                        item.collectNum -= 1
+                                        item.collectNum = item.collectNum!! - 1
                                         switchCollectStyle(item.hasCollect, item, isBtCollect)
                                     }
                                 }
@@ -207,7 +208,7 @@ class ImageShareViewHolder(
                                     }.onError {
                                         ToastUtils.warn("取消收藏失败:${it.message}")
                                         isCollect = item.hasCollect
-                                        item.collectNum += 1
+                                        item.collectNum = item.collectNum!! + 1
                                         switchCollectStyle(item.hasCollect, item, isBtCollect)
                                     }
                                 }
@@ -218,7 +219,7 @@ class ImageShareViewHolder(
 
                 override fun onClick(v: View?) {
                     isCollect = !isCollect // 切换点赞
-                    item.collectNum = if (isCollect) item.collectNum + 1 else item.collectNum - 1
+                    item.collectNum = if (isCollect) item.collectNum!! + 1 else item.collectNum!! - 1
                     switchCollectStyle(isCollect, item, isBtCollect)
                     if (ServiceManager.loginService.isLogin()) { // 先切换图标，延迟发送网络请求，防止多次点击
                         handler.removeMessages(MESSAGE_DELAYED)
@@ -257,7 +258,7 @@ class ImageShareViewHolder(
                                         ToastUtils.warn("点赞失败:${it.message}")
                                         isLiked = item.hasLike
                                         item.likeId = null
-                                        item.likeNum -= 1
+                                        item.likeNum = item.likeNum?.minus(1)
                                         switchLikeStyle(item.hasLike, item, isBtLike)
                                     }
                                 }
@@ -271,7 +272,7 @@ class ImageShareViewHolder(
                                     }.onError {
                                         ToastUtils.warn("取消点赞失败:${it.message}")
                                         isLiked = item.hasLike
-                                        item.likeNum += 1
+                                        item.likeNum = item.likeNum!! + 1
                                         switchLikeStyle(item.hasLike, item, isBtLike)
                                     }
                                 }
@@ -282,7 +283,7 @@ class ImageShareViewHolder(
 
                 override fun onClick(v: View?) {
                     isLiked = !isLiked // 切换点赞
-                    item.likeNum = if (isLiked) item.likeNum + 1 else item.likeNum - 1
+                    item.likeNum = if (isLiked) item.likeNum!! + 1 else item.likeNum!! - 1
                     switchLikeStyle(isLiked, item, isBtLike)
                     if (ServiceManager.loginService.isLogin()) { // 先切换图标，延迟发送网络请求，防止多次点击
                         handler.removeMessages(MESSAGE_DELAYED)

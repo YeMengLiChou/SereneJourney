@@ -250,7 +250,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
 
     }
 
-    // tabLoayout 和 viewpager 初始化
+    // tabLayout 和 viewpager 初始化
     private fun initTabLayout() {
         // 监听tab选中，设置选中tab样式以及调整fab的位置
         binding.tabLayout.apply {
