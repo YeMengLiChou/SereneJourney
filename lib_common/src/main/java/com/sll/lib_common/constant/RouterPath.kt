@@ -24,4 +24,7 @@ const val PATH_USER_ACTIVITY_USER = "http://serenejourney.com/user"
 
 const val PATH_USER_FRAGMENT_MODIFY = "http://serenejourney.com/user"
 
+const val PATH_DETAIL_ACTIVITY_DETAIL = "http://serenejourney.com/detail"
+
+
 const val KEY_EXPIRED = "expired"

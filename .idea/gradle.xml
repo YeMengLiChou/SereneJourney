@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/lib_glide" />
             <option value="$PROJECT_DIR$/lib_network" />
             <option value="$PROJECT_DIR$/lib_room" />
+            <option value="$PROJECT_DIR$/mod_detail" />
             <option value="$PROJECT_DIR$/mod_imageShare" />
             <option value="$PROJECT_DIR$/mod_login" />
             <option value="$PROJECT_DIR$/mod_main" />

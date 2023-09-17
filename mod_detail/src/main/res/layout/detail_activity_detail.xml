@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--   顶部滑动的部分 -->
+    <com.sll.lib_framework.widget.LAppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_topBar"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:minHeight="128dp"
+            app:layout_scrollFlags="exitUntilCollapsed|scroll">
+
+            <TextView
+                android:id="@+id/is_tv_publisher_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="username" />
+
+            <TextView
+                android:id="@+id/is_tv_publish_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/is_tv_publisher_name"
+                tools:text="time" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:id="@+id/is_bt_focus"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="关注"
+                android:textSize="14sp"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/is_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/is_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                app:dividerColor="#F0F0F0"
+                app:layout_constraintTop_toBottomOf="@id/is_tv_publish_time" />
+
+            <TextView
+                android:id="@+id/is_tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/is_tv_content"
+                app:layout_constraintTop_toBottomOf="@id/is_divider"
+                tools:text="title" />
+
+            <TextView
+                android:id="@+id/is_tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:maxHeight="100dp"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/is_tv_title"
+                tools:text="内容\n内容\n内容" />
+
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="@android:color/transparent"
+                android:elevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tabIndicatorColor="#ffffff"
+                app:tabIndicatorFullWidth="false">
+                
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="评论"/>
+            </com.google.android.material.tabs.TabLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.sll.lib_framework.widget.LAppBarLayout>
+
+    <!--   顶部状态栏  -->
+    <RelativeLayout
+        android:id="@+id/layout_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="top"
+        android:translationZ="10dp"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="8dp"
+            android:padding="12dp"
+            android:src="@drawable/user_ic_left_arrow"/>
+
+        <TextView
+            android:id="@+id/tv_title_topBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="24sp"
+            android:layout_toEndOf="@id/iv_back"
+            android:layout_centerVertical="true"
+            tools:text="title"
+            />
+
+        <TextView
+            android:id="@+id/tv_publisher_topBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="8dp"
+            android:layout_toEndOf="@id/tv_title_topBar"
+            android:paddingHorizontal="8dp"
+            android:textSize="20sp"
+            tools:text="username" />
+
+    </RelativeLayout>
+
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:id="@+id/include_bottom_bar"
+        layout="@layout/detail_layout_bottom_bar"
+        android:layout_gravity="bottom"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
