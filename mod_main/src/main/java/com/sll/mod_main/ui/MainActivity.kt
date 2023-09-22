@@ -68,6 +68,7 @@ import com.sll.mod_main.databinding.MainActivityMainBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerHeaderBinding
 import com.therouter.TheRouter
+import com.therouter.router.matchRouteMap
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -253,7 +254,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
 
     }
 
-    // tabLayout 和 viewpager 初始化
+    // tabLoayout 和 viewpager 初始化
     private fun initTabLayout() {
         // 监听tab选中，设置选中tab样式以及调整fab的位置
         binding.tabLayout.apply {
@@ -330,9 +331,14 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
             binding.appbarLayout.setExpanded(true, true)
         }
         // TODO: 清除测试信息
+        //跳转到EditActivity
         binding.fabEditShare.throttleClick {
 //            startActivity(Intent(this, TestActivity::class.java))
-            TheRouter.build(PATH_DETAIL_ACTIVITY_DETAIL).navigation()
+
+            Log.d("theRouter","dsfs")
+            var a = matchRouteMap("/app/edit")
+            Log.d("theRouter",a.toString())
+            TheRouter.build("/app/edit").navigation(this)
         }
     }
 

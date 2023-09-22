@@ -26,5 +26,19 @@
     "action": "",
     "description": "",
     "params": {}
+  },
+  {
+    "path": "/app/edit",
+    "className": "com.example.mod_newshare.ui.EditActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/other",
+    "className": "com.example.mod_newshare.HaActivity",
+    "action": "",
+    "description": "",
+    "params": {}
   }
 ]

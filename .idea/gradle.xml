@@ -21,6 +21,7 @@
             <option value="$PROJECT_DIR$/mod_imageShare" />
             <option value="$PROJECT_DIR$/mod_login" />
             <option value="$PROJECT_DIR$/mod_main" />
+            <option value="$PROJECT_DIR$/mod_newshare" />
             <option value="$PROJECT_DIR$/mod_settings" />
             <option value="$PROJECT_DIR$/mod_user" />
           </set>

@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.sll.lib_common"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdkVersion(libs.versions.android.compileSdk.get().toInt())
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()

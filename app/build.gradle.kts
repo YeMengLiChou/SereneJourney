@@ -53,6 +53,7 @@ dependencies {
     implementation(project(":mod_settings"))
     implementation(project(":mod_imageShare"))
     implementation(project(":mod_detail"))
+    implementation(project(":mod_newshare"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

@@ -16,6 +16,9 @@ const val APP_ID = "00354a923416474da1d6e2ecb64833ba"
 
 const val APP_SECRET = "94058f5102a9c813c49f8bd2fe7f4eec3c8b4"
 
+const val APP_ID_LIN = "1f43d942186848fb87eeb76dcaee2872"
+
+const val APP_SECRET_LIN = "1309564bd23cd775a4405948db1c45ff64d83"
 /** 请求成功 */
 const val CODE_OK = 200
 

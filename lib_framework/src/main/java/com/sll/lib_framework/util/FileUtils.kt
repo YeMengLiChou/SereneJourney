@@ -422,6 +422,7 @@ object FileUtils {
         private val cropLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { cropData ->
             if (cropData.resultCode == Activity.RESULT_OK) {
                 val resUri = cropData?.data?.data
+                Log.i("EditActivity", "Build resUri: $resUri")
                 // TODO 转存到私有目录
                 val copy = resUri?.run {
                     copyUriToInnerStorage(
@@ -531,6 +532,7 @@ object FileUtils {
          * */
         private fun cropIntent(context: Context, uri: Uri): Intent {
             val contentUri = Uri.fromFile(createTempFile(context, "crop", "jpeg"))
+            Log.i(TAG, "cropIntent: $contentUri")
             tmpUri = contentUri // 记录缓存文件，结束时删除
             val intent = Intent("com.android.camera.action.CROP")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
