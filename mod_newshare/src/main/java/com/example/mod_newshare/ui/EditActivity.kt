@@ -140,14 +140,14 @@ class EditActivity : BaseMvvmActivity<NewshareActivityEditBinding, EditViewModel
                                 title,
                                 content,
                                 imageCode,
-                                ServiceManager.userService.getUserInfo()!!.id
+                                ServiceManager.userService.getUserInfo()!!.id!!
                             )
                         } else {
                             viewModel.saveShare(
                                 title,
                                 content,
                                 imageCode,
-                                ServiceManager.userService.getUserInfo()!!.id
+                                ServiceManager.userService.getUserInfo()!!.id!!
                             )
                             FLAG = true
                         }
