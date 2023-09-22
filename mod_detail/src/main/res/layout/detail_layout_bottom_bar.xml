@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@color/detail_white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="点我发送评论"
+        android:gravity="center_vertical"
+        android:background="@drawable/detail_shape_comment_bg"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintEnd_toStartOf="@id/iconTextView_comment"/>
+
+    <com.sll.lib_framework.widget.TopIconTextView
+        android:id="@+id/iconTextView_comment"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:icon="@drawable/detail_ic_comment"
+        android:text="@string/detail_comment"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iconTextView_collect"
+        app:layout_constraintStart_toEndOf="@id/tv_comment"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.sll.lib_framework.widget.TopIconTextView
+        android:id="@+id/iconTextView_collect"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:icon="@drawable/detail_ic_collect"
+        android:text="@string/detail_collect"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iconTextView_comment"
+        app:layout_constraintEnd_toStartOf="@id/iconTextView_like"
+        />
+
+    <com.sll.lib_framework.widget.TopIconTextView
+        android:id="@+id/iconTextView_like"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:icon="@drawable/detail_ic_like"
+        android:text="@string/detail_like"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iconTextView_collect"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
