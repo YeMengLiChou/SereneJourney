@@ -75,6 +75,9 @@ dependencies {
 
     implementation(libs.swipeRefreshLayout)
     implementation(libs.lifecycle.runtime)
+    implementation(libs.paging3)
+    implementation(libs.fragment.ktx)
+    implementation(libs.activity.ktx)
 //    ksp(libs.lifecycle.compiler)
 
     implementation(libs.bundles.viewModel)
