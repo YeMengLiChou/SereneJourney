@@ -211,6 +211,7 @@ class ModifyFragment :
     private fun showBottomFragment(type: Int) {
         val fragment = BottomModifyFragment()
         when (type) {
+            //修改头像
             TYPE_MODIFY_AVATAR -> initAvatarFragment(fragment)
             // 修改用户名
             TYPE_MODIFY_USERNAME -> initUsernameFragment(fragment)

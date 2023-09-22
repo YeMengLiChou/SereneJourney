@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="newshare_white">#FFFFFF</color>
+    <color name="newshare_blue">#8003A9F4</color>
+    <color name="newshare_red">#EDF44336</color>
+    <!--  你这里加上前缀，不然合并的时候可能会发生冲突  -->
+    <color name="newshare_divide">#F3F3F3</color>
+    <color name="newshare_pink">#FDFCFC</color>
+    <color name="newshare_gray">#F7F7F7</color>
+    <color name="newshare_gray_one">#F4F4F4</color>
+    <color name="newshare_gray_two">#F8F5F5</color>
+    <color name="newshare_cancel">#6A000000</color>
+</resources>

@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import android.transition.Slide
+import android.util.Log
 import android.view.View
 import android.widget.GridView
 import android.widget.Toast
@@ -65,6 +66,8 @@ import com.sll.mod_main.TestActivity
 import com.sll.mod_main.databinding.MainActivityMainBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerHeaderBinding
+import com.therouter.TheRouter
+import com.therouter.router.matchRouteMap
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -327,8 +330,14 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
             binding.appbarLayout.setExpanded(true, true)
         }
         // TODO: 清除测试信息
+        //跳转到EditActivity
         binding.fabEditShare.throttleClick {
-            startActivity(Intent(this, TestActivity::class.java))
+//            startActivity(Intent(this, TestActivity::class.java))
+
+            Log.d("theRouter","dsfs")
+            var a = matchRouteMap("/app/edit")
+            Log.d("theRouter",a.toString())
+            TheRouter.build("/app/edit").navigation(this)
         }
     }
 

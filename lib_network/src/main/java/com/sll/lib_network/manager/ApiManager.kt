@@ -5,7 +5,9 @@ import com.sll.lib_framework.ext.moshi
 import com.sll.lib_network.api.ApiService
 import com.sll.lib_network.api.YiYanService
 import com.sll.lib_network.constant.APP_ID
+import com.sll.lib_network.constant.APP_ID_LIN
 import com.sll.lib_network.constant.APP_SECRET
+import com.sll.lib_network.constant.APP_SECRET_LIN
 import com.sll.lib_network.constant.BASE_URL_MAIN
 import com.sll.lib_network.constant.BASE_URL_YIYAN
 import kotlinx.coroutines.Dispatchers

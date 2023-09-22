@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/newshare_gray_two"
+>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="205dp"
+        android:paddingHorizontal="13dp"
+        android:background="@color/newshare_white">
+        <ImageView
+            android:focusable="true"
+            android:clickable="true"
+            android:id="@+id/return_img"
+            android:layout_width="28dp"
+            android:layout_height="25dp"
+            android:layout_gravity="start"
+            android:src="@drawable/icon_return"/>
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:text="编辑图片"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/publish"
+            android:layout_width="60dp"
+            android:layout_height="32dp"
+            android:text="发布"
+            android:textColor="@color/newshare_white"
+            android:layout_gravity="end"
+            android:background="@color/newshare_blue"
+            android:layout_marginEnd="10dp"
+            />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/title_ed"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="起个标题吧"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="0dp"
+        android:paddingHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/newshare_white"
+        />
+
+    <EditText
+        android:id="@+id/content_ed"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginHorizontal="0dp"
+        android:paddingHorizontal="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/newshare_white"
+        android:hint="分享些什么..."
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_ed" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:background="@color/newshare_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/content_ed" />
+
+    <ImageView
+        android:id="@+id/add_img"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:paddingStart="9dp"
+        app:layout_constraintTop_toBottomOf="@+id/recycle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/add_picture_i"
+        android:focusable="true"
+        android:clickable="true"
+        android:contentDescription="add picture"
+        android:background="@color/newshare_white"
+        />
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        app:layout_constraintTop_toBottomOf="@+id/recycle"
+        app:layout_constraintStart_toEndOf="@+id/add_img"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/newshare_white"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
