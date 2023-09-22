@@ -8,10 +8,10 @@ import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_network.manager.ApiManager
 import com.sll.lib_network.repositroy.BaseRepository
 import com.sll.lib_network.response.Res
-import com.sll.mod_imageshare.ui.paging.CollectPagingSource
-import com.sll.mod_imageshare.ui.paging.FocusPagingSource
-import com.sll.mod_imageshare.ui.paging.DiscoverPagingSource
-import com.sll.mod_imageshare.ui.paging.LikePagingSource
+import com.sll.mod_imageshare.adapter.paging.CollectPagingSource
+import com.sll.mod_imageshare.adapter.paging.FocusPagingSource
+import com.sll.mod_imageshare.adapter.paging.DiscoverPagingSource
+import com.sll.mod_imageshare.adapter.paging.LikePagingSource
 import kotlinx.coroutines.flow.Flow
 
 

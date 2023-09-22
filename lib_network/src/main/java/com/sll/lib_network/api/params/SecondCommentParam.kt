@@ -1,5 +1,6 @@
 package com.sll.lib_network.api.params
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
@@ -18,5 +19,5 @@ data class SecondCommentParam(
     val replyCommentUserId: Long,
     val shareId: Long,
     val userId: Long,
-    val username: String
+    @Json(name = "userName") val username: String
 )

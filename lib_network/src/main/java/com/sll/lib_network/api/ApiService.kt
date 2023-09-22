@@ -2,13 +2,13 @@ package com.sll.lib_network.api
 
 import com.sll.lib_common.entity.dto.Comment
 import com.sll.lib_common.entity.dto.ImageSet
-import com.sll.lib_common.entity.dto.Paging
 import com.sll.lib_common.entity.dto.ImageShare
+import com.sll.lib_common.entity.dto.Paging
 import com.sll.lib_common.entity.dto.User
-import com.sll.lib_network.api.params.ShareParam
 import com.sll.lib_network.api.params.CommentParam
 import com.sll.lib_network.api.params.EditParam
 import com.sll.lib_network.api.params.SecondCommentParam
+import com.sll.lib_network.api.params.ShareParam
 import com.sll.lib_network.api.params.UserParam
 import com.sll.lib_network.response.Response
 import okhttp3.MultipartBody
@@ -90,6 +90,7 @@ interface ApiService {
      * @param username 评论人用户名
      */
     @POST("comment/first")
+    @Headers("Content-Type: application/json")
     suspend fun addFirstComment(
         @Body param: CommentParam
     ): Response<String>
@@ -104,7 +105,7 @@ interface ApiService {
      */
     @GET("comment/second")
     suspend fun listSecondComment(
-        @Query("commentId") commentId: Int,
+        @Query("commentId") commentId: Long,
         @Query("current") current: Int = 0,
         @Query("size") size: Int = 10,
         @Query("shareId") shareId: Long
@@ -123,9 +124,22 @@ interface ApiService {
      * @param username 评论人用户名
      */
     @POST("comment/second")
+    @Headers("Content-Type: application/json")
     suspend fun addSecondComment(
         @Body param: SecondCommentParam
     ): Response<String>
+//    @POST("comment/second")
+//    @Headers("Content-Type: application/json")
+//    suspend fun addSecondComment(
+//         @Query("content") content: String,
+//         @Query("parentCommentId") parentCommentId: Long,
+//         @Query("parentCommentUserId") parentCommentUserId: Long,
+//         @Query("replyCommentId") replyCommentId: Long,
+//         @Query("replyCommentUserId") replyCommentUserId: Long,
+//         @Query("shareId") shareId: Long,
+//         @Query("userId") userId: Long,
+//         @Query("username") username: String
+//    ): Response<String>
 
 
     /**
@@ -358,9 +372,15 @@ interface ApiService {
      * @param username 用户名
      * */
     @POST("user/update")
-     suspend fun updateUserInfo(
+    suspend fun updateUserInfo(
         @Body param: RequestBody
     ): Response<String>
+
+    @GET("user/getUserByName")
+    suspend fun getUserByName(
+        @Query("username") username: String
+    ): Response<User>
+
 
 }
 

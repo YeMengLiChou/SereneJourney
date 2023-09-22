@@ -31,5 +31,8 @@ object ServiceManager {
         TheRouter.get(IImageShareService::class.java)!!
     }
 
+    val detailService: IDetailService by lazy {
+        TheRouter.get(IDetailService::class.java)!!
+    }
 
 }

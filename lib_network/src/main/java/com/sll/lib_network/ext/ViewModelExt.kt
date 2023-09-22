@@ -56,9 +56,6 @@ suspend fun <T> ViewModel.requestResponse(
         // 超时
         if (response == null) throw ApiException(ERROR.TIMEOUT_ERROR)
 
-        if (AppHelper.isDebug) {
-            debug("ViewModel", response)
-        }
         // 请求失败
         if (response.isError()) {
             throw ApiException(response.code, response.message ?: "null")

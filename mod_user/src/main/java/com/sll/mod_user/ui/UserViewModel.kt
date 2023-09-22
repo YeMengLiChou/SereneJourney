@@ -96,7 +96,7 @@ class UserViewModel: ViewModel() {
         viewModelScope.launch {
             requestResponse {
                 UserRepository.updateUserInfo(
-                    userId = userInfo.value!!.id,
+                    userId = userInfo.value!!.id!!,
                     username = username
                 )
             }.collect {
@@ -112,7 +112,7 @@ class UserViewModel: ViewModel() {
         viewModelScope.launch {
             requestResponse {
                 UserRepository.updateUserInfo(
-                    userId = userInfo.value!!.id,
+                    userId = userInfo.value!!.id!!,
                     avatar = avatar
                 )
             }.collect {
@@ -131,7 +131,7 @@ class UserViewModel: ViewModel() {
         viewModelScope.launch {
             requestResponse {
                 UserRepository.updateUserInfo(
-                    userId = userInfo.value!!.id,
+                    userId = userInfo.value!!.id!!,
                     introduce = introduce
                 )
             }.collect {
@@ -147,7 +147,7 @@ class UserViewModel: ViewModel() {
         viewModelScope.launch {
             requestResponse {
                 UserRepository.updateUserInfo(
-                    userId = userInfo.value!!.id,
+                    userId = userInfo.value!!.id!!,
                     sex = sex
                 )
             }.collect {

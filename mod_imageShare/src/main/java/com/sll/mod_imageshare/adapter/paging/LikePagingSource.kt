@@ -1,4 +1,4 @@
-package com.sll.mod_imageshare.ui.paging
+package com.sll.mod_imageshare.adapter.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -32,7 +32,7 @@ class LikePagingSource(
             // 当前页号
             val page = params.key ?: 1
             // 请求内容
-            val response = apiService.listLikedShare(page, 15, ServiceManager.userService.getUserInfo()!!.id)
+            val response = apiService.listLikedShare(page, 15, ServiceManager.userService.getUserInfo()!!.id!!)
             // 分页内容
             val data = response.data?.records
             return if (data != null) {

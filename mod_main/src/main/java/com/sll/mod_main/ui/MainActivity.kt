@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import android.transition.Slide
+import android.util.Log
 import android.view.View
 import android.widget.GridView
 import android.widget.Toast
@@ -31,6 +32,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
+import com.sll.lib_common.constant.PATH_DETAIL_ACTIVITY_DETAIL
 import com.sll.lib_common.entity.dto.User
 import com.sll.lib_common.interfaces.FragmentScrollable
 import com.sll.lib_common.service.ServiceManager
@@ -65,6 +67,7 @@ import com.sll.mod_main.TestActivity
 import com.sll.mod_main.databinding.MainActivityMainBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerHeaderBinding
+import com.therouter.TheRouter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -328,7 +331,8 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         }
         // TODO: 清除测试信息
         binding.fabEditShare.throttleClick {
-            startActivity(Intent(this, TestActivity::class.java))
+//            startActivity(Intent(this, TestActivity::class.java))
+            TheRouter.build(PATH_DETAIL_ACTIVITY_DETAIL).navigation()
         }
     }
 

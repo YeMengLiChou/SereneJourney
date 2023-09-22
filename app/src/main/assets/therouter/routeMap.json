@@ -14,15 +14,15 @@
     "params": {}
   },
   {
-    "path": "http://serenejourney.com/login/login",
+    "path": "http://serenejourney.com/login",
     "className": "com.sll.mod_login.ui.LoginActivity",
     "action": "",
     "description": "",
     "params": {}
   },
   {
-    "path": "http://serenejourney.com/login",
-    "className": "com.sll.mod_login.ui.LoginActivity",
+    "path": "http://serenejourney.com/detail",
+    "className": "com.sll.mod_detail.ui.activity.DetailActivity",
     "action": "",
     "description": "",
     "params": {}

@@ -27,7 +27,7 @@ import com.sll.mod_detail.databinding.DetailLayoutBottomCommentBinding
  *
  *
  *
- * @author Preke-Li
+ * @author Gleamrise
  * <br/>Created: 2023/09/19
  */
 class CommentBottomFragment :

@@ -23,7 +23,7 @@ class LAppBarLayout @JvmOverloads constructor(
     }
 
     interface OnStateChangedListener {
-        fun onStateChange(appBarLayout: AppBarLayout, state: State)
+        fun onStateChange(appBarLayout: LAppBarLayout, state: State)
     }
 
     enum class State {
@@ -40,7 +40,7 @@ class LAppBarLayout @JvmOverloads constructor(
     var currentState: State = State.EXPANDED
         private set
 
-    // 当前
+    // 当前偏移量
     var verticalOffset: Int = 0
         private set
 

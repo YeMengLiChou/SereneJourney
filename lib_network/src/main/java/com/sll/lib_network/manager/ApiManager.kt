@@ -31,7 +31,7 @@ object ApiManager {
     val api by lazy {
         RetrofitManager.create(
             RetrofitManager.buildInstance(BASE_URL_MAIN) {
-                this.addConverterFactory(MoshiConverterFactory.create(moshi))
+                this.addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
                     .client(
                         RetrofitManager.initOkHttpClient(
                             Headers.headersOf(

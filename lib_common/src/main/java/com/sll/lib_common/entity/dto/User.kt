@@ -12,13 +12,13 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class User(
     // 用户创建应用的id
-    val appKey: String,
+    val appKey: String?,
     // 头像
     val avatar: String?,
     // 创建时间
     val createTime: Long,
     // 主键id
-    val id: Long,
+    val id: Long?,
     // 个人介绍
     val introduce: String?,
     // 修改时间

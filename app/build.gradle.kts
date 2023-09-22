@@ -41,7 +41,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-
+    implementation(libs.theRouter)
     implementation(project(":lib_common"))
     implementation(project(":lib_framework"))
     implementation(project(":lib_network"))

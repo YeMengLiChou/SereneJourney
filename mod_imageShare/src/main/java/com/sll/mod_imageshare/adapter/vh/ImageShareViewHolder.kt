@@ -17,6 +17,7 @@ import com.sll.lib_common.entity.dto.ImageShare
 import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_common.setRemoteImage
 import com.sll.lib_framework.base.viewholder.BaseBindViewHolder
+import com.sll.lib_framework.ext.As
 import com.sll.lib_framework.ext.dp
 import com.sll.lib_framework.ext.fromHtml
 import com.sll.lib_framework.ext.res.color
@@ -44,13 +45,27 @@ class ImageShareViewHolder(
     binding: IsLayoutItemImageShareBinding,
     private val context: Context,
     private val scope: LifecycleCoroutineScope,
-    private val click: (view: ImageView, item: ImageShare, position: Int) -> Unit,
     private val adapter: PagingDataAdapter<ImageShare, ImageShareViewHolder>
 ) : BaseBindViewHolder<IsLayoutItemImageShareBinding>(binding) {
 
     companion object {
         private const val MESSAGE_DELAYED = 123
         private const val TIME_DELAYED = 300L
+    }
+
+    /**
+     * 该 ViewHolder 点击监听，用于监听整体的点击以及ImageView的点击
+     * */
+    interface OnClickListener {
+        /**
+         * ImageView 的点击
+         * @param imageView
+         * @param item 对应的ImageShare
+         * @param position 对应第几个ImageView
+         * */
+        fun onImageViewClick(imageView: ImageView, item: ImageShare, position: Int)
+
+        fun onItemClick(view: View)
     }
 
     // 屏幕宽度 - 两侧外边距 - 项之间的边距
@@ -64,6 +79,10 @@ class ImageShareViewHolder(
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
+    private var mNeedFocus = true
+
+    private var mOnClickListener: OnClickListener? = null
+
     /**
      * 解析时间戳并格式化为年月日时分的字符串
      *
@@ -75,18 +94,30 @@ class ImageShareViewHolder(
         return dateFormat.format(date)
     }
 
-    private var needFocus = true
 
 
-    fun needShowFocus(focus: Boolean): ImageShareViewHolder {
-        this.needFocus = focus
+    fun setFocus(focus: Boolean): ImageShareViewHolder {
+        this.mNeedFocus = focus
+        return this
+    }
+
+    /**
+     * 设置点击监听
+     * */
+    fun setClickListener(listener: OnClickListener): ImageShareViewHolder {
+        this.mOnClickListener = listener
         return this
     }
 
     fun bindData(item: ImageShare): ImageShareViewHolder {
+
         if (item.collectNum == null) item.collectNum = 0
         if (item.likeNum == null) item.likeNum = 0
+
         binding.apply {
+            root.click {
+                mOnClickListener?.onItemClick(it)
+            }
             // 内容
             isTvContent.text = item.content
             isTvTitle.text = item.title
@@ -108,7 +139,7 @@ class ImageShareViewHolder(
             isFlowImages.referencedIds = ids
 
 
-            if (needFocus) {
+            if (mNeedFocus) {
                 // 关注点击
                 switchFocusStyle(item.hasFocus, isBtFocus)
                 isBtFocus.setOnClickListener(object : View.OnClickListener {
@@ -322,7 +353,8 @@ class ImageShareViewHolder(
             isFocusable = true
             elevation = 3F // 给一部分阴影
             click { // 点击后触发外部的点击事件
-                click.invoke(it as ImageView, item, urlPosition)
+//                click.invoke(it as ImageView, item, urlPosition)
+                mOnClickListener?.onImageViewClick(it as ImageView, item, urlPosition)
             }
             if (size == 1) {
                 layoutParams = ViewGroup.LayoutParams(minColumnWidth, ViewGroup.LayoutParams.WRAP_CONTENT)

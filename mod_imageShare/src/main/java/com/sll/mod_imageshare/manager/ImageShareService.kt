@@ -22,18 +22,18 @@ object ImageShareService : IImageShareService {
 
 
     override fun navigateDiscoverFragment(containerId: Int): Fragment {
-        return ImageShareFragment(containerId, ImageShareFragment.TYPE_DISCOVER)
+        return ImageShareFragment.newInstance(containerId, ImageShareFragment.TYPE_DISCOVER)
     }
 
     override fun navigateFocusFragment(containerId: Int): Fragment {
-        return ImageShareFragment(containerId, ImageShareFragment.TYPE_FOCUS)
+        return ImageShareFragment.newInstance(containerId, ImageShareFragment.TYPE_FOCUS)
     }
 
     override fun navigateLikeFragment(containerId: Int): Fragment {
-        return ImageShareFragment(containerId, ImageShareFragment.TYPE_LIKE)
+        return ImageShareFragment.newInstance(containerId, ImageShareFragment.TYPE_LIKE)
     }
 
     override fun navigateCollectFragment(containerId: Int): Fragment {
-        return ImageShareFragment(containerId, ImageShareFragment.TYPE_COLLECT)
+        return ImageShareFragment.newInstance(containerId, ImageShareFragment.TYPE_COLLECT)
     }
 }

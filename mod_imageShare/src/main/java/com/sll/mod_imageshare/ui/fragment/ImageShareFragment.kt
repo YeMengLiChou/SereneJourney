@@ -1,27 +1,20 @@
 package com.sll.mod_imageshare.ui.fragment
 
+import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.sll.lib_common.entity.dto.ImageShare
 import com.sll.lib_common.interfaces.FragmentScrollable
 import com.sll.lib_framework.base.fragment.BaseMvvmFragment
 import com.sll.lib_framework.ext.As
 import com.sll.lib_framework.ext.launchOnCreated
 import com.sll.lib_framework.ext.view.checkReachTop
 import com.sll.lib_framework.util.ToastUtils
-import com.sll.lib_network.manager.ApiManager
 import com.sll.mod_image_share.databinding.IsFragmentDiscoverBinding
-import com.sll.mod_imageshare.adapter.ImageShareAdapter
 import com.sll.mod_imageshare.adapter.FooterAdapter
-import com.sll.mod_imageshare.adapter.vh.ImageShareViewHolder
-import com.sll.mod_imageshare.ui.paging.CollectPagingSource
-import com.sll.mod_imageshare.ui.paging.DiscoverPagingSource
-import com.sll.mod_imageshare.ui.paging.FocusPagingSource
-import com.sll.mod_imageshare.ui.paging.LikePagingSource
+import com.sll.mod_imageshare.adapter.ImageShareAdapter
 import com.sll.mod_imageshare.ui.vm.ImageShareViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -32,10 +25,9 @@ import kotlinx.coroutines.flow.collectLatest
  * @author Gleamrise
  * <br/>Created: 2023/08/19
  */
-class ImageShareFragment(
-    private val containerId: Int,
-    private val type: Int
-) : BaseMvvmFragment<IsFragmentDiscoverBinding, ImageShareViewModel>(), FragmentScrollable {
+class ImageShareFragment() :
+    BaseMvvmFragment<IsFragmentDiscoverBinding, ImageShareViewModel>(),
+    FragmentScrollable {
 
     companion object {
         private const val TAG = "ImageShareFragment"
@@ -43,10 +35,22 @@ class ImageShareFragment(
         const val TYPE_COLLECT = 2
         const val TYPE_FOCUS = 3
         const val TYPE_DISCOVER = 4
+
+        const val KEY_CONTAINER_ID = "container_id"
+        const val KEY_TYPE = "type"
+        fun newInstance(containerId: Int, type: Int): ImageShareFragment {
+            return ImageShareFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(KEY_CONTAINER_ID, containerId)
+                    putInt(KEY_TYPE, type)
+                }
+            }
+        }
     }
 
+    private var containerId: Int = 0
 
-
+    private var type = 0
 
     override fun scrollToTop() {
         binding.isRecyclerViewContent.stopScroll()
@@ -66,7 +70,12 @@ class ImageShareFragment(
     }
 
     override fun onDefCreateView() {
+        arguments?.let {
+            containerId = it.getInt(KEY_CONTAINER_ID)
+            type = it.getInt(KEY_TYPE)
+        }
         initRecyclerView()
+
     }
 
     override fun initViewBinding(container: ViewGroup?) = IsFragmentDiscoverBinding.inflate(layoutInflater)

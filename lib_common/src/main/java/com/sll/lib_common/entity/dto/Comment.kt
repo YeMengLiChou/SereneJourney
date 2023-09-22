@@ -1,5 +1,6 @@
 package com.sll.lib_common.entity.dto
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
@@ -20,19 +21,26 @@ data class Comment(
     // 创建时间
     val createTime: String,
     // 主键id
-    val id: Int,
+    val id: String,
     // 评论人userId
-    val pUserId: Int,
+    val pUserId: String,
     // 父评论id
-    val parentCommentId: Int,
+    val parentCommentId: String?,
     // 父评论的用户id
-    val parentCommentUserId: Int,
+    val parentCommentUserId: String?,
     // 被回复的评论id
-    val replyCommentId: Int,
+    val replyCommentId: String?,
     // 被回复的评论用户id
-    val replyCommentUserId: Int,
+    val replyCommentUserId: String?,
     // 图文分享的主键id
-    val shareId: Int,
+    val shareId: String,
     // 评论人用户名
-    val userName: String
+    @Json(name="userName") val username: String,
+
+    val status: Int,
+
+    val praiseNum: Int,
+
+    val topStatus: Int,
+
 )
