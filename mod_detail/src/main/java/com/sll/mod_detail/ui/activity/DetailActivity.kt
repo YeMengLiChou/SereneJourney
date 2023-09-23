@@ -1,5 +1,6 @@
 package com.sll.mod_detail.ui.activity
 
+import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
@@ -7,10 +8,12 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.button.MaterialButton
 import com.sll.lib_common.constant.PATH_DETAIL_ACTIVITY_DETAIL
 import com.sll.lib_common.entity.dto.ImageShare
@@ -56,7 +59,9 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
     companion object {
         private const val TAG = "DetailActivity"
 
-        private const val KEY_IMAGE_SHARE = "image_share"
+        const val KEY_IMAGE_SHARE = "image_share"
+
+        const val FLAG_SCROLL_TO_COMMENT = "comment"
 
         private const val MESSAGE_FOCUS = 1
 
@@ -84,6 +89,8 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
 
     private var mCommentFragment: CommentBottomFragment? = null
 
+    private var mScrollToComment = true
+
     private val mApiHandler = Handler(Looper.myLooper() ?: Looper.getMainLooper()) {
         when (it.what) {
             // 点赞
@@ -107,16 +114,42 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
 
     override fun onDefCreate(savedInstanceState: Bundle?) {
         TheRouter.inject(this)
-        viewModel.setImageShare(intent?.extras?.getParcelable("ImageShare")!!)
+        // 状态栏
         SystemBarUtils.immersiveStatusBar(this)
         binding.includeTopBar.root.post {
             val statusHeight = SystemBarUtils.getStatusBarHeight(this)
             binding.includeTopBar.spaceMargin.height(statusHeight)
         }
 
+        viewModel.setImageShare(intent?.extras?.getParcelable(KEY_IMAGE_SHARE)!!)
+        intent?.extras?.getBoolean(FLAG_SCROLL_TO_COMMENT, false)?.let {
+
+        }
+
         initView()
         initData()
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (mScrollToComment) {
+            mScrollToComment = false
+            binding.appBarLayout.apply {
+                post {
+                    val behavior = this.layoutParams.As<CoordinatorLayout.LayoutParams>()?.behavior as AppBarLayout.Behavior
+                    ValueAnimator.ofInt(0, -10000).apply {
+                        addUpdateListener {
+                            behavior.topAndBottomOffset = it.animatedValue as Int
+                            requestLayout()
+                        }
+                        duration = 200
+                        start()
+                    }
+                }
+            }
+        }
+    }
+
 
     override fun initViewBinding(container: ViewGroup?) = DetailActivityDetailBinding.inflate(layoutInflater)
 
@@ -402,6 +435,8 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
             }
         }
     }
+
+
 
 
 }

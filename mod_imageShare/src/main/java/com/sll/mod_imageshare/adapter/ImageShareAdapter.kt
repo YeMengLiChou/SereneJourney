@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.LifecycleOwner
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.sll.lib_common.entity.dto.ImageShare
 import com.sll.lib_common.service.ServiceManager
 import com.sll.mod_image_share.databinding.IsLayoutItemImageShareBinding
+import com.sll.mod_image_share.databinding.IsLayoutItemImageSharePreviewBinding
+import com.sll.mod_imageshare.adapter.vh.ImageShare2ViewHolder
 import com.sll.mod_imageshare.adapter.vh.ImageShareViewHolder
 
 /**
@@ -24,7 +27,7 @@ class ImageShareAdapter(
     private val context: Context,
     private val scope: LifecycleCoroutineScope,
     private val click: (view: ImageView, item: ImageShare, position: Int) -> Unit
-) : PagingDataAdapter<ImageShare, ImageShareViewHolder>(comparator) {
+) : PagingDataAdapter<ImageShare, ImageShare2ViewHolder>(comparator) {
     companion object {
         private const val TAG = "ImageShareAdapter"
 
@@ -45,28 +48,34 @@ class ImageShareAdapter(
         this.needShowFocus = focus
     }
 
-    override fun onBindViewHolder(holder: ImageShareViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ImageShare2ViewHolder, position: Int) {
         val item = getItem(position) ?: return
         holder
-            .bindData(item)
-            .setFocus(needShowFocus)
-            .setClickListener(object : ImageShareViewHolder.OnClickListener {
+            .setForceFocus(needShowFocus)
+            .setOnItemActionListener(object : ImageShare2ViewHolder.OnItemActionListener {
                 override fun onImageViewClick(imageView: ImageView, item: ImageShare, position: Int) {
                     click.invoke(imageView, item, position)
                 }
 
                 override fun onItemClick(view: View) {
-                    ServiceManager.detailService.navigate(context, item)
+                    ServiceManager.detailService.navigate(context, item, false)
                 }
-            })
+
+                override fun onNeedRefresh() {
+
+                }
+
+                override fun onCommentClick() {
+                    ServiceManager.detailService.navigate(context, item, true)
+
+                }
+            }).bindData(item)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageShareViewHolder {
-        return ImageShareViewHolder(
-            IsLayoutItemImageShareBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            context,
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageShare2ViewHolder {
+        return ImageShare2ViewHolder(
+            IsLayoutItemImageSharePreviewBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             scope,
-            this
         )
     }
 
