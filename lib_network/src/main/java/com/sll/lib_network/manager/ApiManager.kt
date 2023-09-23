@@ -9,6 +9,7 @@ import com.sll.lib_network.constant.APP_ID
 import com.sll.lib_network.constant.APP_ID_LIN
 import com.sll.lib_network.constant.APP_SECRET
 import com.sll.lib_network.constant.APP_SECRET_LIN
+import com.sll.lib_network.constant.BASE_URL_IMAGE
 import com.sll.lib_network.constant.BASE_URL_MAIN
 import com.sll.lib_network.constant.BASE_URL_YIYAN
 import kotlinx.coroutines.Dispatchers
@@ -64,7 +65,7 @@ object ApiManager {
     // 图片 api
     val imageApi by lazy {
         RetrofitManager.create(
-            RetrofitManager.buildInstance(BASE_URL_YIYAN) {
+            RetrofitManager.buildInstance(BASE_URL_IMAGE) {
                 this.addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
                 client(RetrofitManager.initOkHttpClient())
             },

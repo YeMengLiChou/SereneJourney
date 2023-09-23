@@ -2,13 +2,15 @@ package com.sll.mod_main.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sll.lib_common.entity.dto.User
 import com.sll.lib_common.service.ServiceManager
-import com.sll.lib_framework.util.debug
 import com.sll.lib_network.ext.request
 import com.sll.lib_network.manager.ApiManager
+import com.sll.lib_network.response.ImageResponse
+import com.sll.lib_network.response.Res
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -33,6 +35,13 @@ class MainViewModel: ViewModel() {
     val caption = _caption.asStateFlow()
 
 
+    // 抽屉的背景图
+    private val _drawerRandomImageState = MutableStateFlow<Res<ImageResponse>?>(null)
+    val drawerRandowImageState = _drawerRandomImageState.asStateFlow()
+
+    // 主页的背景图
+    private val _mainRandomImageState = MutableStateFlow<Res<ImageResponse>?>(null)
+    val mainRandomImageState = _mainRandomImageState.asStateFlow()
 
     // ================== 网络请求 ===============================
 
@@ -48,6 +57,29 @@ class MainViewModel: ViewModel() {
                         _caption.value = TIPS_NETWORK_ERROR_CLICK
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     *
+     * */
+    fun getDrawerRandomImage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            request {
+                ApiManager.imageApi.getRandomImage()
+            }.collect { res ->
+                _drawerRandomImageState.value = res
+            }
+        }
+    }
+
+    fun getMainRandomImage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            request {
+                ApiManager.imageApi.getRandomImage()
+            }.collect { res ->
+                _mainRandomImageState.value = res
             }
         }
     }

@@ -10,6 +10,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -129,7 +130,7 @@ inline fun ImageView.setRemoteBackground(
     crossinline callback: (Drawable?) -> Unit = {}
 ) {
     Glide.with(this).load(url)
-        .diskCacheStrategy(DiskCacheStrategy.ALL) // 缓存原数据，方便下载
+        .diskCacheStrategy(DiskCacheStrategy.RESOURCE) // 缓存原数据，方便下载
         .transform(BlendColorTransformation(Color.parseColor("#D0D0D0")))
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
@@ -174,7 +175,7 @@ fun downloadOriginPictures(
                 bitmap,
                 prefix = "save",
                 format = Bitmap.CompressFormat.PNG,
-                ServiceManager.settingService.getPicturesSavePath()
+                savePath = path
             )
         )
     }

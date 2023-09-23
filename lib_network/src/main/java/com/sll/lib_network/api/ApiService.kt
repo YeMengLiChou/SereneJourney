@@ -127,18 +127,6 @@ interface ApiService {
     suspend fun addSecondComment(
         @Body param: SecondCommentParam
     ): Response<String>
-//    @POST("comment/second")
-//    @Headers("Content-Type: application/json")
-//    suspend fun addSecondComment(
-//         @Query("content") content: String,
-//         @Query("parentCommentId") parentCommentId: Long,
-//         @Query("parentCommentUserId") parentCommentUserId: Long,
-//         @Query("replyCommentId") replyCommentId: Long,
-//         @Query("replyCommentUserId") replyCommentUserId: Long,
-//         @Query("shareId") shareId: Long,
-//         @Query("userId") userId: Long,
-//         @Query("username") username: String
-//    ): Response<String>
 
 
     /**

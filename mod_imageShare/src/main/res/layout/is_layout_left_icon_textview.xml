@@ -3,8 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="?selectableItemBackground">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/iv_icon"
@@ -17,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tv_text"
-        app:srcCompat="@drawable/is_ic_left_arrow"/>
+        tools:srcCompat="@drawable/is_ic_left_arrow" />
 
     <TextView
         android:id="@+id/tv_text"

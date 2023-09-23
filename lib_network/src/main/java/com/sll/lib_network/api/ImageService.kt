@@ -1,6 +1,8 @@
 package com.sll.lib_network.api
 
+import com.sll.lib_network.response.ImageResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  *
@@ -11,6 +13,11 @@ import retrofit2.http.GET
  */
 interface ImageService {
 
-    @GET
-    fun getRandomImage()
+    /***
+     * 随机返回一张图片 url
+     * */
+    @GET("pixiv/")
+    suspend fun getRandomImage(
+        @Query("type") type: String = "JSON"
+    ): ImageResponse
 }

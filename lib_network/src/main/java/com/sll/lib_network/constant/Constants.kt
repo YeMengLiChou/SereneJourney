@@ -12,7 +12,7 @@ const val BASE_URL_MAIN = "http://47.107.52.7:88/member/photo/"
 
 const val BASE_URL_YIYAN = "https://v1.hitokoto.cn/"
 
-const val BASE_URL_IMAGE = "https://img.paulzzh.com/touhou/random/"
+const val BASE_URL_IMAGE = "https://api.likepoems.com/img/"
 
 const val APP_ID = "00354a923416474da1d6e2ecb64833ba"
 
