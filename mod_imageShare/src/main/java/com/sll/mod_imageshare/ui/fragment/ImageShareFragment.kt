@@ -54,7 +54,7 @@ class ImageShareFragment() :
 
     override fun scrollToTop() {
         binding.isRecyclerViewContent.stopScroll()
-        binding.isRecyclerViewContent.scrollToPosition(0)
+        binding.isRecyclerViewContent.smoothScrollToPosition(0) // 平滑滚动上去
     }
 
     override fun scrollTo(x: Int, y: Int) {
