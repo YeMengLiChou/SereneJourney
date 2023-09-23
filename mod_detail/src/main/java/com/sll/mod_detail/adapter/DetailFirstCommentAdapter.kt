@@ -136,6 +136,7 @@ class DetailFirstCommentAdapter(
 
     // 加载二级评论
     private fun loadSecondLevelComment(holder: CommentViewHolder, parentComment: Comment) {
+        //隐藏回复的线性布局
         holder.binding.linearLayoutReply.gone()
         mCoroutineScope?.launch(Dispatchers.IO) {
             DetailRepository.requestResponse {

@@ -34,7 +34,7 @@ import kotlin.reflect.KClass
  *
  *
  *
- * @author Gleamrise
+ * @author Preke-Li
  * <br/>Created: 2023/09/21
  */
 class CommentDetailFragment : BaseMvvmFragment<DetailFragmentCommentDetailBinding, DetailViewModel>() {
