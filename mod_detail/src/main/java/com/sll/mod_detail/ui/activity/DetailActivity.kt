@@ -48,7 +48,7 @@ import kotlin.reflect.KClass
  *
  *
  *
- * @author Gleamrise
+ * @author Preke-Li
  * <br/>Created: 2023/09/12
  */
 @Route(path = PATH_DETAIL_ACTIVITY_DETAIL)
