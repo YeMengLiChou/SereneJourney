@@ -7,7 +7,21 @@
     "params": {}
   },
   {
+    "path": "app/user/",
+    "className": "com.sll.mod_user.ui.UserActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "http://serenejourney.com/settings",
+    "className": "com.sll.mod_settings.ui.SettingActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "app/settings/",
     "className": "com.sll.mod_settings.ui.SettingActivity",
     "action": "",
     "description": "",
@@ -21,8 +35,29 @@
     "params": {}
   },
   {
+    "path": "app/login/",
+    "className": "com.sll.mod_login.ui.LoginActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "http://serenejourney.com/detail",
     "className": "com.sll.mod_detail.ui.activity.DetailActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "app/detail/",
+    "className": "com.sll.mod_detail.ui.activity.DetailActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "app/newshare_edit/",
+    "className": "com.example.mod_newshare.ui.EditActivity",
     "action": "",
     "description": "",
     "params": {}

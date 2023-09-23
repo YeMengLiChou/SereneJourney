@@ -63,8 +63,7 @@ interface ApiService {
      * */
     @POST("collect/cancel")
     suspend fun cancelCollectShare(
-        @Query("shareId") shareId: String,
-        @Query("userId") userId: Long
+        @Query("collectId") collectId: String,
     ): Response<String>
 
 
@@ -320,7 +319,7 @@ interface ApiService {
         @Query("current") current: Int = 0,
         @Query("size") size: Int = 10,
         @Query("userId") userId: Long
-    ): Response<String>
+    ): Response<Paging<ImageShare>>
 
 
     /**

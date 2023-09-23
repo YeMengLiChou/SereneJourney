@@ -112,6 +112,8 @@ class CommentBottomFragment :
 
     override fun onStart() {
         super.onStart()
+
+
         binding.tvTitle.text = mTitle
         // 默认不能发送
         binding.btSend.isEnabled = false

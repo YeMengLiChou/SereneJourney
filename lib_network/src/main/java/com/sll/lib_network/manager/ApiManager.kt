@@ -3,6 +3,7 @@ package com.sll.lib_network.manager
 import com.sll.lib_framework.ext.lazyNone
 import com.sll.lib_framework.ext.moshi
 import com.sll.lib_network.api.ApiService
+import com.sll.lib_network.api.ImageService
 import com.sll.lib_network.api.YiYanService
 import com.sll.lib_network.constant.APP_ID
 import com.sll.lib_network.constant.APP_ID_LIN
@@ -57,6 +58,17 @@ object ApiManager {
                 client(RetrofitManager.initOkHttpClient())
             },
             YiYanService::class.java
+        )
+    }
+
+    // 图片 api
+    val imageApi by lazy {
+        RetrofitManager.create(
+            RetrofitManager.buildInstance(BASE_URL_YIYAN) {
+                this.addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+                client(RetrofitManager.initOkHttpClient())
+            },
+            ImageService::class.java
         )
     }
 

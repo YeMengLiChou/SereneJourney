@@ -24,4 +24,8 @@ class ImageShareViewModel: ViewModel() {
     fun fetchLikeImageShares() = ImageRepository.fetchLikeImageShare().cachedIn(viewModelScope)
 
     fun fetchCollectImageShares() = ImageRepository.fetchCollectImageShare().cachedIn(viewModelScope)
+
+    fun fetchSavedImageShares() = ImageRepository.fetchSavedImageShare().cachedIn(viewModelScope)
+
+    fun fetchPublishImageShares() = ImageRepository.fetchPublishImageShare().cachedIn(viewModelScope)
 }

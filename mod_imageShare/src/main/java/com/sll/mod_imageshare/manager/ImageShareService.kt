@@ -36,4 +36,12 @@ object ImageShareService : IImageShareService {
     override fun navigateCollectFragment(containerId: Int): Fragment {
         return ImageShareFragment.newInstance(containerId, ImageShareFragment.TYPE_COLLECT)
     }
+
+    override fun navigatePublishFragment(containerId: Int): Fragment {
+        return ImageShareFragment.newInstance(containerId, ImageShareFragment.TYPE_PUBLISH)
+    }
+
+    override fun navigateDraftFragment(containerId: Int): Fragment {
+        return ImageShareFragment.newInstance(containerId, ImageShareFragment.TYPE_DRAFT)
+    }
 }

@@ -11,6 +11,8 @@ import com.sll.lib_framework.base.fragment.BaseMvvmFragment
 import com.sll.lib_framework.ext.As
 import com.sll.lib_framework.ext.launchOnCreated
 import com.sll.lib_framework.ext.view.checkReachTop
+import com.sll.lib_framework.ext.view.gone
+import com.sll.lib_framework.ext.view.visible
 import com.sll.lib_framework.util.ToastUtils
 import com.sll.mod_image_share.databinding.IsFragmentDiscoverBinding
 import com.sll.mod_imageshare.adapter.FooterAdapter
@@ -35,6 +37,8 @@ class ImageShareFragment() :
         const val TYPE_COLLECT = 2
         const val TYPE_FOCUS = 3
         const val TYPE_DISCOVER = 4
+        const val TYPE_PUBLISH = 5
+        const val TYPE_DRAFT = 6
 
         const val KEY_CONTAINER_ID = "container_id"
         const val KEY_TYPE = "type"
@@ -101,6 +105,13 @@ class ImageShareFragment() :
 
                     is LoadState.NotLoading -> {
                         binding.isSwipeRefreshContent.isRefreshing = false
+                        if (pagingAdapter.itemCount == 0) {
+                            binding.tvEmptyTips.visible()
+                            binding.isRecyclerViewContent.gone()
+                        } else {
+                            binding.tvEmptyTips.gone()
+                            binding.isRecyclerViewContent.visible()
+                        }
                     }
 
                     is LoadState.Error -> {
@@ -136,7 +147,6 @@ class ImageShareFragment() :
                     }
                 }
                 TYPE_COLLECT -> {
-                    pagingAdapter.setFocus(false)
                     // 更新数据
                     viewModel.fetchCollectImageShares().collectLatest {
                         pagingAdapter.submitData(it)
@@ -144,7 +154,19 @@ class ImageShareFragment() :
                 }
                 TYPE_FOCUS -> {
                     // 更新数据
+                    pagingAdapter.setFocus(true)
                     viewModel.fetchFocusImageShares().collectLatest {
+                        pagingAdapter.submitData(it)
+                    }
+                }
+                TYPE_PUBLISH -> {
+                    // 更新数据
+                    viewModel.fetchPublishImageShares().collectLatest {
+                        pagingAdapter.submitData(it)
+                    }
+                }
+                TYPE_DRAFT -> {
+                    viewModel.fetchSavedImageShares().collectLatest {
                         pagingAdapter.submitData(it)
                     }
                 }

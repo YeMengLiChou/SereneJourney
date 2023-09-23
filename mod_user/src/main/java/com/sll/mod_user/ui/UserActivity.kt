@@ -58,11 +58,11 @@ class UserActivity : BaseMvvmActivity<UserActivityUserBinding, UserViewModel>() 
     private val textViews = mutableListOf<TextView>()
 
     private val fragments = SparseArray<Fragment>(5).apply {
-        this.append(0, Fragment())
+        this.append(0, ServiceManager.isService.navigatePublishFragment(R.id.user_fragmentContainerView))
         this.append(1, ServiceManager.isService.navigateFocusFragment(R.id.user_fragmentContainerView))
         this.append(2, ServiceManager.isService.navigateLikeFragment(R.id.user_fragmentContainerView))
         this.append(3, ServiceManager.isService.navigateCollectFragment(R.id.user_fragmentContainerView))
-        this.append(4, Fragment())
+        this.append(4, ServiceManager.isService.navigateDraftFragment(R.id.user_fragmentContainerView))
     }
 
     override fun onDefCreate(savedInstanceState: Bundle?) {

@@ -46,7 +46,7 @@ class DetailViewModel : ViewModel() {
 
 
     // 更新图文分享信息
-    private fun updateImageShare(shareId: String) {
+    fun updateImageShare(shareId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             requestResponse {
                 DetailRepository.getImageShareDetail(shareId)
@@ -72,7 +72,7 @@ class DetailViewModel : ViewModel() {
         val preLike =
         viewModelScope.launch(Dispatchers.IO) {
             requestResponse {
-                DetailRepository.likeImageShare(currentShareId.toLong())
+                DetailRepository.likeImageShare(currentShareId)
             }.collect { res ->
                 res.onSuccess {
                     // 关注成功
@@ -101,12 +101,9 @@ class DetailViewModel : ViewModel() {
     fun collectImageShare() {
         viewModelScope.launch(Dispatchers.IO) {
             requestResponse {
-                DetailRepository.collectImageShare(currentShareId.toLong())
+                DetailRepository.collectImageShare(currentShareId)
             }.collect { res ->
-                res.onSuccess {
-                    // 关注成功
-                    _userFocusState.value = true
-                }
+                _imageShareCollectState.value = res
             }
         }
     }

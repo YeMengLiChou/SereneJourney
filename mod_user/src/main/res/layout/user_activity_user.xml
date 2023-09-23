@@ -143,7 +143,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        android:layout_gravity="bottom|end" />
+        android:layout_gravity="bottom|end"
+        android:visibility="gone"/>
 
 <!--承载 fragment 容器-->
     <androidx.fragment.app.FragmentContainerView

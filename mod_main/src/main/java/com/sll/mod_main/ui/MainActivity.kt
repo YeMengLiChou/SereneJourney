@@ -51,6 +51,7 @@ import com.sll.lib_framework.ext.res.tint
 import com.sll.lib_framework.ext.view.click
 import com.sll.lib_framework.ext.view.gone
 import com.sll.lib_framework.ext.view.height
+import com.sll.lib_framework.ext.view.invisible
 import com.sll.lib_framework.ext.view.longClick
 import com.sll.lib_framework.ext.view.marginWidth
 import com.sll.lib_framework.ext.view.setClipViewCornerRadius
@@ -176,10 +177,11 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
             when (it.itemId) {
                 R.id.main_item_switch_cover -> {
                     // TODO 切换
+
                 }
 
                 R.id.main_item_download -> {
-                    // TODO 下载
+
                 }
 
                 R.id.main_item_custom -> {
@@ -330,15 +332,10 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
             }
             binding.appbarLayout.setExpanded(true, true)
         }
-        // TODO: 清除测试信息
-        //跳转到EditActivity
-        binding.fabEditShare.throttleClick {
-//            startActivity(Intent(this, TestActivity::class.java))
 
-            Log.d("theRouter","dsfs")
-            var a = matchRouteMap("/app/edit")
-            Log.d("theRouter",a.toString())
-            TheRouter.build("/app/edit").navigation(this)
+        // 跳转到EditActivity
+        binding.fabEditShare.throttleClick {
+            ServiceManager.newShareService.navigation(this@MainActivity)
         }
     }
 
@@ -472,17 +469,19 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         }
 
         // ----------------------- footer --------------------
+//        footerBinding.root.invisible()
         footerBinding.mainTvSettings.apply {
+//            gone()
             click { ServiceManager.settingService.navigate() }
         }
 
         // TODO： 切换日渐夜间模式
         footerBinding.mainTvToggleMode.apply {
-
+            gone()
         }
 
         footerBinding.mainTvSkin.apply {
-
+            gone()
         }
 
     }
@@ -496,6 +495,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                     when (it.itemId) {
                         R.id.main_item_download_background -> {
                             // TODO 下载背景图
+
                             true
                         }
 
@@ -655,7 +655,6 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
      * 清除登录用户的信息
      * */
     private fun clearUserInfoUI() {
-        // TODO 清除其他用户信息
         headerBinding.mainTvUsername.gone()
         headerBinding.mainTvIntroduce.gone()
         headerBinding.mainTvCreateTime.gone()
@@ -669,16 +668,14 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
      * 更新登录界面的信息
      * */
     private fun updateUserInfoUI(user: User) {
-        // TODO 更新其他信息
         headerBinding.mainTvUsername.apply {
-            // TODO 判断男女，在后面加一个图标
             text = user.username
-            val icon = if (user.sex == null) {
-//                drawable(R.drawable.ma)
-                1
-            } else {
-                0
+            val icon = when (user.sex) {
+                1 -> drawable(R.drawable.main_ic_man)
+                2 -> drawable(R.drawable.main_ic_woman)
+                else -> null
             }
+            setIcon(icon)
             visible()
         }
 
@@ -710,8 +707,6 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         window.exitTransition = Slide(Gravity.BOTTOM)
         window.enterTransition = Fade()
         startActivity(intent)
-
-        // TODO: 动画跳转
     }
 
     private fun navigateToUserInfo() {

@@ -62,7 +62,7 @@ class ImageShareAdapter(
                 }
 
                 override fun onNeedRefresh() {
-
+                    refresh()
                 }
 
                 override fun onCommentClick() {

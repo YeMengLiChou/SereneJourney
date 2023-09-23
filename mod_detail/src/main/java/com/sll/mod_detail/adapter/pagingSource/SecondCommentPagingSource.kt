@@ -35,11 +35,11 @@ class SecondCommentPagingSource(
             val response = DetailRepository.getSecondLevelComments(commentId, page, 15, shareId)
             // 分页内容
             val data = response.data?.records
-            return if (data != null) {
+            return if (response.code == 200) {
                 LoadResult.Page(
-                    data = data,
+                    data = data ?: emptyList(),
                     prevKey = if (page > 1) page - 1 else null,
-                    nextKey = if (data.isNotEmpty()) page + 1 else null
+                    nextKey = if (data?.isNotEmpty() == true) page + 1 else null
                 )
             } else {
                 LoadResult.Error(ApiException(ERROR.NETWORK_ERROR))

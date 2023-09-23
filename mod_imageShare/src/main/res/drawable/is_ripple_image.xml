@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#80ffffff">
+    <!-- 设置mask  -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="oval">
+            <size android:width="200dp" android:height="50dp"/>
+            <solid android:color="@color/is_white" />
+        </shape>
+    </item>
+</ripple>

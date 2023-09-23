@@ -14,13 +14,13 @@ import com.sll.lib_network.error.ExceptionHandler
  *
  *
  * @author Gleamrise
- * <br/>Created: 2023/08/19
+ * <br/>Created: 2023/08/21
  */
-class DiscoverPagingSource(
+class PublishPagingSource(
     private val apiService: ApiService
 ): PagingSource<Int, ImageShare>() {
     companion object {
-        private const val TAG = "DiscoverPagingSource"
+        private const val TAG = "PublishPagingSource"
     }
 
     override fun getRefreshKey(state: PagingState<Int, ImageShare>): Int? {
@@ -32,7 +32,7 @@ class DiscoverPagingSource(
             // 当前页号
             val page = params.key ?: 1
             // 请求内容
-            val response = apiService.listDiscoverShare(page, 15, ServiceManager.userService.getUserInfo()!!.id!!)
+            val response = apiService.listMyselfShare(page, 15, ServiceManager.userService.getUserInfo()!!.id!!)
             // 分页内容
             val data = response.data?.records
             return if (response.code == 200) {
