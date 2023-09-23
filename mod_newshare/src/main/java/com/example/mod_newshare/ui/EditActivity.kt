@@ -20,6 +20,7 @@ import androidx.core.net.toFile
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mod_newshare.adapter.UploadImagesAdapter
 import com.example.mod_newshare.databinding.NewshareActivityEditBinding
+import com.sll.lib_common.constant.PATH_NEWSHARE_ACTIVITY_EDIT
 import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_framework.base.activity.BaseMvvmActivity
 import com.sll.lib_framework.ext.launchIO
@@ -36,7 +37,7 @@ import java.io.OutputStream
 import java.net.URI
 
 //import com.example.mod_newshare.ui
-@Route(path = "/app/edit")
+@Route(path = PATH_NEWSHARE_ACTIVITY_EDIT)
 class EditActivity : BaseMvvmActivity<NewshareActivityEditBinding, EditViewModel>() {
     companion object {
         const val TAG = "EditActivity"
