@@ -189,7 +189,7 @@ fun downloadOriginPictures(
     url: String,
     crop: Boolean = false
 ) {
-    if (crop) this.scaleType = ImageView.ScaleType.CENTER_INSIDE
+    this.scaleType = ImageView.ScaleType.CENTER_INSIDE
     Glide.with(this)
         .load(url)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)

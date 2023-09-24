@@ -18,6 +18,7 @@ import com.sll.lib_common.setRemoteImage
 import com.sll.lib_framework.base.viewholder.BaseBindViewHolder
 import com.sll.lib_framework.ext.As
 import com.sll.lib_framework.ext.dp
+import com.sll.lib_framework.ext.dpf
 import com.sll.lib_framework.ext.res.color
 import com.sll.lib_framework.ext.res.drawable
 import com.sll.lib_framework.ext.view.click
@@ -66,7 +67,7 @@ class ImageShare2ViewHolder(
 
     private var mOnItemActionListener: OnItemActionListener? = null
 
-    private val mLikeExpandAnimator = ValueAnimator.ofFloat(1f, 1.2f).apply {
+    private val mLikeExpandAnimator = ValueAnimator.ofFloat(1f, 1.5f).apply {
         addUpdateListener {
             val value = it.animatedValue as Float
             binding.includeLike.ivIcon.scaleX = value
@@ -74,14 +75,14 @@ class ImageShare2ViewHolder(
             Log.i(TAG, "update: $value")
         }
         duration = 200
-        interpolator = OvershootInterpolator(1.2f)
+        interpolator = OvershootInterpolator(1.5f)
         doOnEnd {
             binding.includeLike.ivIcon.setImageResource(R.drawable.is_ic_like_fill)
             mLikeShrinkAnimator.start()
         }
     }
 
-    private val mLikeShrinkAnimator = ValueAnimator.ofFloat(1.2f, 1f).apply {
+    private val mLikeShrinkAnimator = ValueAnimator.ofFloat(1.5f, 1f).apply {
         addUpdateListener {
             val value = it.animatedValue as Float
             binding.includeLike.ivIcon.scaleX = value
@@ -252,7 +253,7 @@ class ImageShare2ViewHolder(
         binding.frameLayoutImages.setClipViewCornerRadius(dp8)
         // 计算当前位置的大小
         val width =
-            (binding.root.width - dp8 - binding.root.paddingStart * 2).takeIf { it > 0 } ?: (AppManager.screenWidthPx - dp8 * 5 )
+            (binding.root.width - binding.root.paddingStart * 2).takeIf { it > 0 } ?: (AppManager.screenWidthPx - dp8 * 4 )
         val height = width / 2
 
         // url的长度
@@ -263,13 +264,17 @@ class ImageShare2ViewHolder(
             binding.frameLayoutImages.gone()
         } else {
             // 加载图片
-            binding.frameLayoutImages.height(height).width(width + dp8).visible()
+            binding.frameLayoutImages.apply {
+                elevation = 3f
+                height(height).width(width).visible()
+            }
 
             if (imageSize == 1) {
                 addImageViewToLinearLayout(width, height, item.imageUrlList[0], 0, item)
             } else {
-                addImageViewToLinearLayout(width / 2, height, item.imageUrlList[0], 0, item)
-                addImageViewToLinearLayout(width / 2, height, item.imageUrlList[1], 1, item).apply {
+                val imageViewSize = (width - dp8).shl(1)
+                addImageViewToLinearLayout(imageViewSize, imageViewSize, item.imageUrlList[0], 0, item)
+                addImageViewToLinearLayout(imageViewSize, imageViewSize, item.imageUrlList[1], 1, item).apply {
                     margin(left = dp8)
                 }
             }
@@ -279,7 +284,7 @@ class ImageShare2ViewHolder(
             } else {
                 // 设置标志
                 binding.tvMoreImages.visible()
-                binding.tvMoreImages.setClipViewCornerRadius(dp8)
+                binding.tvMoreImages.setClipViewCornerRadius(dp8.shl(1))
                 binding.tvMoreImages.text = "+${imageSize}"
             }
         }
@@ -289,7 +294,6 @@ class ImageShare2ViewHolder(
      * 根据不同的需要获取 ImageView
      * */
     private fun addImageViewToLinearLayout(width: Int, height: Int, url: String, position: Int, item: ImageShare): ImageView {
-        Log.i(TAG, "addImageViewToLinearLayout: ${width}, ${height}, $position")
         val view = ImageView(context).apply {
             scaleType = ImageView.ScaleType.CENTER_CROP
             click {
@@ -299,7 +303,6 @@ class ImageShare2ViewHolder(
             setBackgroundColor(Color.WHITE) // 设置白色背景
             isClickable = true
             isFocusable = true
-            elevation = 3F // 给一部分阴影
             foreground = context.drawable(R.drawable.is_ripple_imageview_pressed)
         }
         view.setRemoteImage(url, true)
