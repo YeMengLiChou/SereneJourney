@@ -28,6 +28,7 @@ import com.sll.lib_framework.ext.view.setClipViewCornerRadius
 import com.sll.lib_framework.ext.view.throttleClick
 import com.sll.lib_framework.ext.view.visible
 import com.sll.lib_framework.ext.view.width
+import com.sll.lib_framework.manager.AppManager
 import com.sll.lib_framework.util.ToastUtils
 import com.sll.mod_image_share.R
 import com.sll.mod_image_share.databinding.IsLayoutItemImageSharePreviewBinding
@@ -198,7 +199,6 @@ class ImageShare2ViewHolder(
             }
             binding.includeUserProfile.btFocus.setTag(R.id.is_tag_focus, null)
             if (mIsForceFocused || item.hasFocus) {
-                Log.i(TAG, "loadUserInfo: focus:${item.username} ${mIsForceFocused} ${item.hasFocus}")
                 setFocusStyle(true)
             } else {
                 setFocusStyle(false)
@@ -251,20 +251,20 @@ class ImageShare2ViewHolder(
         val dp8 = 8.dp
         binding.frameLayoutImages.setClipViewCornerRadius(dp8)
         // 计算当前位置的大小
-        val width = binding.root.width - dp8 - binding.root.paddingStart * 2
+        val width =
+            (binding.root.width - dp8 - binding.root.paddingStart * 2).takeIf { it > 0 } ?: (AppManager.screenWidthPx - dp8 * 5 )
         val height = width / 2
+
         // url的长度
         val imageSize = item.imageUrlList.size
-
-        binding.frameLayoutImages.height(height).width(width + dp8)
         // 移除所有imageView
         binding.linearImages.removeAllViews()
         if (imageSize == 0) {
             binding.frameLayoutImages.gone()
         } else {
             // 加载图片
-            binding.frameLayoutImages.visible()
-            binding.frameLayoutImages.height(height)
+            binding.frameLayoutImages.height(height).width(width + dp8).visible()
+
             if (imageSize == 1) {
                 addImageViewToLinearLayout(width, height, item.imageUrlList[0], 0, item)
             } else {
@@ -289,6 +289,7 @@ class ImageShare2ViewHolder(
      * 根据不同的需要获取 ImageView
      * */
     private fun addImageViewToLinearLayout(width: Int, height: Int, url: String, position: Int, item: ImageShare): ImageView {
+        Log.i(TAG, "addImageViewToLinearLayout: ${width}, ${height}, $position")
         val view = ImageView(context).apply {
             scaleType = ImageView.ScaleType.CENTER_CROP
             click {
