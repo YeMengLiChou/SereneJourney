@@ -15,5 +15,5 @@ interface IDetailService {
     /**
      * 跳转到 [com.sll.mod_detail.ui.activity.DetailActivity]
      * */
-    fun navigate(context: Context, imageShare: ImageShare)
+    fun navigate(context: Context, imageShare: ImageShare, needScrollToComment: Boolean)
 }

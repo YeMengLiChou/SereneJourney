@@ -155,29 +155,28 @@ object DetailRepository: BaseRepository() {
     /**
      * 给图文分享点赞
      * */
-    suspend fun likeImageShare(shareId: Long): Response<String> {
-        return ApiManager.api.likeShare(shareId.toString(), userId = currentUserId!!)
+    suspend fun likeImageShare(shareId: String): Response<String> {
+        return ApiManager.api.likeShare(shareId = shareId, userId = currentUserId!!)
     }
 
     /**
      * 取消给图文分享点赞
      * */
-    suspend fun cancelLikeImageShare(likeId: Long): Response<String> {
-        return ApiManager.api.cancelLike(likeId.toString())
+    suspend fun cancelLikeImageShare(likeId: String): Response<String> {
+        return ApiManager.api.cancelLike(likeId)
     }
 
     /**
      * 收藏图文分享
      * */
-    suspend fun collectImageShare(shareId: Long): Response<String> {
-        return ApiManager.api.collectShare(shareId.toString(), userId = currentUserId!!)
+    suspend fun collectImageShare(shareId: String): Response<String> {
+        return ApiManager.api.collectShare(shareId, userId = currentUserId!!)
     }
 
     /**
      * 取消收藏图文分享
      * */
-    suspend fun cancelCollectImageShare(shareId: Long): Response<String> {
-        return ApiManager.api.cancelCollectShare(shareId.toString(), userId = currentUserId!!)
+    suspend fun cancelCollectImageShare(collectId: String): Response<String> {
+        return ApiManager.api.cancelCollectShare(collectId = collectId)
     }
-
 }

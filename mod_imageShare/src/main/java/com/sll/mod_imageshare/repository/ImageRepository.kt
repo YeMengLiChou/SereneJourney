@@ -3,15 +3,21 @@ package com.sll.mod_imageshare.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sll.lib_common.entity.dto.Comment
 import com.sll.lib_common.entity.dto.ImageShare
+import com.sll.lib_common.entity.dto.Paging
+import com.sll.lib_common.entity.dto.User
 import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_network.manager.ApiManager
 import com.sll.lib_network.repositroy.BaseRepository
 import com.sll.lib_network.response.Res
+import com.sll.lib_network.response.Response
 import com.sll.mod_imageshare.adapter.paging.CollectPagingSource
 import com.sll.mod_imageshare.adapter.paging.FocusPagingSource
 import com.sll.mod_imageshare.adapter.paging.DiscoverPagingSource
 import com.sll.mod_imageshare.adapter.paging.LikePagingSource
+import com.sll.mod_imageshare.adapter.paging.PublishPagingSource
+import com.sll.mod_imageshare.adapter.paging.SavedPagingSource
 import kotlinx.coroutines.flow.Flow
 
 
@@ -79,6 +85,25 @@ object ImageRepository: BaseRepository() {
         ).flow
     }
 
+    fun fetchPublishImageShare(): Flow<PagingData<ImageShare>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 15
+            ),
+            pagingSourceFactory = { PublishPagingSource(ApiManager.api) }
+        ).flow
+    }
+    fun fetchSavedImageShare(): Flow<PagingData<ImageShare>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 15
+            ),
+            pagingSourceFactory = { SavedPagingSource(ApiManager.api) }
+        ).flow
+    }
+
     /**
      * 更新图文信息
      *
@@ -113,9 +138,9 @@ object ImageRepository: BaseRepository() {
     /**
      * 取消收藏
      * */
-    fun cancelCollectImageShare(shareId: String): Flow<Res<String?>> {
+    fun cancelCollectImageShare(collectId: String): Flow<Res<String?>> {
         return requestResponse {
-            ApiManager.api.cancelCollectShare(shareId, userId)
+            ApiManager.api.cancelCollectShare(collectId)
         }
     }
 
@@ -145,5 +170,16 @@ object ImageRepository: BaseRepository() {
             ApiManager.api.cancelFocus(focusUserId, userId)
         }
     }
+
+
+    /**
+     * 通过用户名获取用户信息
+     * */
+    suspend fun getUserByName(
+        username: String
+    ): Response<User> {
+        return ApiManager.api.getUserByName(username)
+    }
+
 }
 

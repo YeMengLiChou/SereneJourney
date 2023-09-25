@@ -27,7 +27,7 @@ import com.sll.mod_detail.databinding.DetailLayoutBottomCommentBinding
  *
  *
  *
- * @author Gleamrise
+ * @author Preke-Li
  * <br/>Created: 2023/09/19
  */
 class CommentBottomFragment :
@@ -112,6 +112,8 @@ class CommentBottomFragment :
 
     override fun onStart() {
         super.onStart()
+
+
         binding.tvTitle.text = mTitle
         // 默认不能发送
         binding.btSend.isEnabled = false

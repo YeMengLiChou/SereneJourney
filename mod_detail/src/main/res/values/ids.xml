@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="detail_tag_focus" type="id"/>
+    <item name="detail_tag_like" type="id"/>
+    <item name="detail_tag_collect" type="id"/>
+</resources>

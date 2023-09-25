@@ -216,7 +216,6 @@ object ToastUtils {
         @DrawableRes drawableId: Int,
         location: Location
     ) {
-        info("Toast", msg)
         toast?.let {
             cancel()
             toast = null

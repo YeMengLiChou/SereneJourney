@@ -11,37 +11,49 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="205dp"
-        android:paddingHorizontal="13dp"
+        android:paddingHorizontal="16dp"
+        android:elevation="2dp"
         android:background="@color/newshare_white">
-        <ImageView
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
             android:focusable="true"
             android:clickable="true"
             android:id="@+id/return_img"
-            android:layout_width="28dp"
-            android:layout_height="25dp"
-            android:layout_gravity="start"
-            android:src="@drawable/icon_return"/>
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_vertical"
+            app:roundPercent="1"
+            android:background="?selectableItemBackground"
+            android:src="@drawable/newshare_ic_left_arrow"/>
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="20dp"
-            android:text="编辑图片"
+            android:textSize="16sp"
+            android:text="编辑图文分享"
             android:textStyle="bold"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/publish"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="60dp"
             android:layout_height="32dp"
+            android:insetBottom="0dp"
+            android:insetTop="0dp"
+            android:padding="0dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="16sp"
             android:text="发布"
+            app:cornerRadius="8dp"
+            app:elevation="1dp"
             android:textColor="@color/newshare_white"
-            android:layout_gravity="end"
-            android:background="@color/newshare_blue"
-            android:layout_marginEnd="10dp"
+            android:layout_gravity="center_vertical|end"
+            app:backgroundTint="#FF769FCD"
             />
 
     </androidx.appcompat.widget.Toolbar>
@@ -49,56 +61,54 @@
     <EditText
         android:id="@+id/title_ed"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:hint="起个标题吧"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="0dp"
-        android:paddingHorizontal="20dp"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/newshare_white"
-        />
+        app:layout_constraintBottom_toTopOf="@id/content_ed"
+        android:background="@color/newshare_white" />
 
     <EditText
         android:id="@+id/content_ed"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginHorizontal="0dp"
-        android:paddingHorizontal="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:minHeight="200dp"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="start|top"
         android:background="@color/newshare_white"
         android:hint="分享些什么..."
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:textColor="#e0000000"
         app:layout_constraintTop_toBottomOf="@+id/title_ed" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
+        android:maxHeight="256dp"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/newshare_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/content_ed" />
 
     <ImageView
         android:id="@+id/add_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:paddingStart="9dp"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         app:layout_constraintTop_toBottomOf="@+id/recycle"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/add_picture_i"
         android:focusable="true"
         android:clickable="true"
-        android:contentDescription="add picture"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
         android:background="@color/newshare_white"
-        />
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        app:layout_constraintTop_toBottomOf="@+id/recycle"
-        app:layout_constraintStart_toEndOf="@+id/add_img"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/newshare_white"/>
+        android:scaleType="centerInside"
+        app:tint="#d0d0d0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

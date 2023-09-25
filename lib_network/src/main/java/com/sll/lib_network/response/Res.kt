@@ -7,9 +7,9 @@ package com.sll.lib_network.response
  * @author Gleamrise
  * <br/>Created: 2023/08/03
  */
-sealed class Res <out T> {
+sealed class Res<out T> {
 
-    val isSuccess get() =  this is Success
+    val isSuccess get() = this is Success
 
     val isError get() = this is Error
 
@@ -24,10 +24,10 @@ sealed class Res <out T> {
     data class Error(val throwable: Throwable) : Res<Nothing>()
 
     /** 请求重试时 */
-    data class Retry(val attempt: Int): Res<Int>()
+    data class Retry(val attempt: Int) : Res<Int>()
 
     /** 请求进行时 */
-    object Loading: Res<Nothing>()
+    object Loading : Res<Nothing>()
 
     /**
      * 请求 **成功** 时的回调
@@ -99,6 +99,8 @@ sealed class Res <out T> {
         }
         return this
     }
+
+
 }
 
 

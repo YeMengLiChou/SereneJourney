@@ -35,4 +35,8 @@ object ServiceManager {
         TheRouter.get(IDetailService::class.java)!!
     }
 
+    val newShareService: INewShareService by lazy {
+        TheRouter.get(INewShareService::class.java)!!
+    }
+
 }

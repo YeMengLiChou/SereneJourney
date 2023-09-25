@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.constraintlayout.utils.widget.ImageFilterView
+import androidx.core.view.setPadding
 import com.sll.lib_framework.R
 
 /**
@@ -28,7 +30,7 @@ class TopIconTextView @JvmOverloads constructor(
     }
 
     // 顶部icon
-    private lateinit var mTopIconImageView: ImageView
+    private lateinit var mTopIconImageView: ImageFilterView
 
     val iconView get() = mTopIconImageView
 
@@ -77,11 +79,12 @@ class TopIconTextView @JvmOverloads constructor(
     }
 
     private fun initImageView() {
-        mTopIconImageView = ImageView(context)
+        mTopIconImageView = ImageFilterView(context)
         mTopIconImageView.apply {
             setImageResource(mIconResId)
-//            roundPercent = 1f
+            roundPercent = 1f
             adjustViewBounds = true
+            setPadding(2.dp)
             scaleType = ImageView.ScaleType.CENTER_INSIDE
         }
     }

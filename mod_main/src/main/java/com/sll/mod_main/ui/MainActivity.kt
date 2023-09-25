@@ -1,44 +1,49 @@
 package com.sll.mod_main.ui
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Intent
 import android.os.Bundle
 import android.transition.Explode
 import android.transition.Fade
+import android.transition.Slide
 import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.CycleInterpolator
+import android.view.animation.OvershootInterpolator
 import android.view.animation.RotateAnimation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.animation.doOnEnd
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.net.toFile
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
-import android.transition.Slide
-import android.util.Log
-import android.view.View
-import android.widget.GridView
-import android.widget.Toast
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.ViewCompat
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
-import com.sll.lib_common.constant.PATH_DETAIL_ACTIVITY_DETAIL
+import com.sll.lib_common.downloadOriginPictures
 import com.sll.lib_common.entity.dto.User
 import com.sll.lib_common.interfaces.FragmentScrollable
 import com.sll.lib_common.service.ServiceManager
 import com.sll.lib_common.setAvatar
 import com.sll.lib_common.setLocalBackground
 import com.sll.lib_common.setRemoteBackground
+import com.sll.lib_common.setRemoteImage
 import com.sll.lib_framework.base.activity.BaseMvvmActivity
 import com.sll.lib_framework.ext.As
 import com.sll.lib_framework.ext.dp
@@ -51,8 +56,8 @@ import com.sll.lib_framework.ext.res.tint
 import com.sll.lib_framework.ext.view.click
 import com.sll.lib_framework.ext.view.gone
 import com.sll.lib_framework.ext.view.height
+import com.sll.lib_framework.ext.view.invisible
 import com.sll.lib_framework.ext.view.longClick
-import com.sll.lib_framework.ext.view.marginWidth
 import com.sll.lib_framework.ext.view.setClipViewCornerRadius
 import com.sll.lib_framework.ext.view.setClipViewCornerTopRadius
 import com.sll.lib_framework.ext.view.throttleClick
@@ -63,13 +68,12 @@ import com.sll.lib_framework.util.StatusBarUtils
 import com.sll.lib_framework.util.SystemBarUtils
 import com.sll.lib_framework.util.ToastUtils
 import com.sll.mod_main.R
-import com.sll.mod_main.TestActivity
 import com.sll.mod_main.databinding.MainActivityMainBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerHeaderBinding
-import com.therouter.TheRouter
-import com.therouter.router.matchRouteMap
+import com.sll.mod_main.ui.behavior.FloatingActionButtonBehavior
 import kotlinx.coroutines.launch
+import okhttp3.internal.checkDuration
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -94,6 +98,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
     // TODO: 保存 fragments 的状态
     private val fragments = mutableListOf<Fragment>()
 
+    private var mCurrentPosition = 0
     // drawer的布局
     private lateinit var headerBinding: MainLayoutDrawerHeaderBinding
 
@@ -102,6 +107,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
     // drawer 部分的菜单
     private lateinit var headerPopupMenu: PopupMenu
 
+    private var mFabButtonExpanded = false
 
     // =========================== override ======================
 
@@ -113,7 +119,6 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         initDrawerUI()
         fitSystemBar()
     }
-
 
     override fun initViewBinding(container: ViewGroup?): MainActivityMainBinding =
         MainActivityMainBinding.inflate(layoutInflater)
@@ -175,11 +180,24 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.main_item_switch_cover -> {
-                    // TODO 切换
+                    viewModel.getMainRandomImage()
                 }
 
                 R.id.main_item_download -> {
-                    // TODO 下载
+                    if (ServiceManager.settingService.getIsMainBackgroundFromRemote()) {
+                        ServiceManager.settingService.getMainBackgroundPath()?.let { url ->
+                            downloadOriginPictures(
+                                this@MainActivity,
+                                url
+                            ) { uri ->
+                                uri?.let {
+                                    ToastUtils.success("图片已保存到:${it.path}~")
+                                } ?: ToastUtils.error("图片保存失败~")
+                            }
+                        } ?: ToastUtils.warn("暂无图片可下载~")
+                    } else {
+                        ToastUtils.warn("本地图片不可下载~")
+                    }
                 }
 
                 R.id.main_item_custom -> {
@@ -202,9 +220,26 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
             }
             return@longClick false
         }
+
+        // 加载网络图片
+        launchOnCreated {
+            viewModel.mainRandomImageState.collect { res ->
+                res?.onSuccess {
+                    binding.ivToolbarBackground.setRemoteImage(it.url)
+                    ServiceManager.settingService.apply {
+                        setMainBackgroundPath(it.url)
+                        setMainBackgroundLastUpdateTime(System.currentTimeMillis())
+                        setIsMainBackgroundFromRemote(true)
+                        binding.toolbar.menu.findItem(R.id.main_item_download)?.isEnabled = true
+                    }
+                }?.onError {
+                    ToastUtils.error("加载失败~")
+                }
+            }
+        }
+
         // 如果是从网络加载
         if (ServiceManager.settingService.getIsMainBackgroundFromRemote()) {
-            // TODO 网络加载
             binding.ivToolbarBackground.setRemoteBackground(ServiceManager.settingService.getMainBackgroundPath())
         } else {
             binding.ivToolbarBackground.setLocalBackground(ServiceManager.settingService.getMainBackgroundPath())
@@ -305,8 +340,16 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
 
                 override fun createFragment(position: Int): Fragment = fragments[position]
             }
+            this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    mCurrentPosition = position
+                }
+            })
         }
     }
+
+
 
     // 初始化 button 的点击事件
     private fun initButton() {
@@ -330,15 +373,23 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
             }
             binding.appbarLayout.setExpanded(true, true)
         }
-        // TODO: 清除测试信息
-        //跳转到EditActivity
-        binding.fabEditShare.throttleClick {
-//            startActivity(Intent(this, TestActivity::class.java))
 
-            Log.d("theRouter","dsfs")
-            var a = matchRouteMap("/app/edit")
-            Log.d("theRouter",a.toString())
-            TheRouter.build("/app/edit").navigation(this)
+        // 跳转到 EditActivity
+        binding.fabEditShare.throttleClick(300L) {
+            if (mFabButtonExpanded) {
+                closEditFab()
+            } else {
+                expandEditFab()
+            }
+            mFabButtonExpanded = !mFabButtonExpanded
+        }
+
+        binding.fabEditNew.throttleClick {
+            ServiceManager.newShareService.navigation(this@MainActivity)
+        }
+
+        binding.fabEditDraft.throttleClick {
+
         }
     }
 
@@ -465,24 +516,25 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
 
         // 如果是从网络加载
         if (ServiceManager.settingService.getIsDrawerBackgroundFromRemote()) {
-            // TODO 网络加载
             headerBinding.mainIvBackground.setRemoteBackground(ServiceManager.settingService.getDrawerBackgroundPath())
         } else {
             headerBinding.mainIvBackground.setLocalBackground(ServiceManager.settingService.getDrawerBackgroundPath())
         }
 
         // ----------------------- footer --------------------
+        footerBinding.root.invisible()
         footerBinding.mainTvSettings.apply {
+            gone()
             click { ServiceManager.settingService.navigate() }
         }
 
         // TODO： 切换日渐夜间模式
         footerBinding.mainTvToggleMode.apply {
-
+            gone()
         }
 
         footerBinding.mainTvSkin.apply {
-
+            gone()
         }
 
     }
@@ -495,12 +547,25 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                 val consumed: Boolean =
                     when (it.itemId) {
                         R.id.main_item_download_background -> {
-                            // TODO 下载背景图
+                            if (ServiceManager.settingService.getIsDrawerBackgroundFromRemote()) {
+                                ServiceManager.settingService.getDrawerBackgroundPath()?.let { url ->
+                                    downloadOriginPictures(
+                                        this@MainActivity,
+                                        url
+                                    ) { uri ->
+                                        uri?.let {
+                                            ToastUtils.success("图片已保存到:${it.path}~")
+                                        } ?: ToastUtils.error("图片保存失败~")
+                                    }
+                                } ?: ToastUtils.warn("暂无图片可下载~")
+                            } else {
+                                ToastUtils.warn("本地图片不可下载~")
+                            }
                             true
                         }
 
                         R.id.main_item_switch_background -> {
-                            // TODO 切换背景图
+                            viewModel.getDrawerRandomImage()
                             true
                         }
 
@@ -526,6 +591,22 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         }
         // 如果是本地设置的图片，那么就需要禁用下载，默认是远程加载
         headerPopupMenu.menu.findItem(R.id.main_item_download_background)?.isEnabled = ServiceManager.settingService.getIsDrawerBackgroundFromRemote()
+        // 加载网络图片
+        launchOnCreated {
+            viewModel.drawerRandowImageState.collect { res ->
+                res?.onSuccess {
+                    headerBinding.mainIvBackground.setRemoteImage(it.url)
+                    ServiceManager.settingService.apply {
+                        setDrawerBackgroundPath(it.url)
+                        setDrawerBackgroundLastUpdateTime(System.currentTimeMillis())
+                        setIsDrawerBackgroundFromRemote(true)
+                        binding.toolbar.menu.findItem(R.id.main_item_download)?.isEnabled = true
+                    }
+                }?.onError {
+                    ToastUtils.error("加载失败~")
+                }
+            }
+        }
     }
 
 
@@ -539,7 +620,6 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         headerBinding.mainTvCaption.throttleClick(2000) {
             viewModel.getCaption()
         }
-
 
         // 将 viewModel更新到界面上
         lifecycleScope.launch {
@@ -625,7 +705,10 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                     ToastUtils.error("选择取消")
                 }
             }
+        // 如果是本地设置的图片，那么就需要禁用下载，默认是远程加载
+        headerPopupMenu.menu.findItem(R.id.main_item_download_background)?.isEnabled = ServiceManager.settingService.getIsDrawerBackgroundFromRemote()
     }
+
 
     /**
      * 自定义主页背景
@@ -648,6 +731,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                     ToastUtils.error("选择出错")
                 }
             }
+        binding.toolbar.menu.findItem(R.id.main_item_download)?.isEnabled = ServiceManager.settingService.getIsMainBackgroundFromRemote()
     }
 
 
@@ -655,7 +739,6 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
      * 清除登录用户的信息
      * */
     private fun clearUserInfoUI() {
-        // TODO 清除其他用户信息
         headerBinding.mainTvUsername.gone()
         headerBinding.mainTvIntroduce.gone()
         headerBinding.mainTvCreateTime.gone()
@@ -669,16 +752,14 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
      * 更新登录界面的信息
      * */
     private fun updateUserInfoUI(user: User) {
-        // TODO 更新其他信息
         headerBinding.mainTvUsername.apply {
-            // TODO 判断男女，在后面加一个图标
             text = user.username
-            val icon = if (user.sex == null) {
-//                drawable(R.drawable.ma)
-                1
-            } else {
-                0
+            val icon = when (user.sex) {
+                1 -> drawable(R.drawable.main_ic_man)
+                2 -> drawable(R.drawable.main_ic_woman)
+                else -> null
             }
+            setIcon(icon)
             visible()
         }
 
@@ -710,8 +791,6 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         window.exitTransition = Slide(Gravity.BOTTOM)
         window.enterTransition = Fade()
         startActivity(intent)
-
-        // TODO: 动画跳转
     }
 
     private fun navigateToUserInfo() {
@@ -723,12 +802,73 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         ViewCompat.setTransitionName(headerBinding.mainIvAvatar, "avatar")
         ViewCompat.setTransitionName(headerBinding.mainTvUsername, "username")
 
-        val avatarPair = androidx.core.util.Pair.create((headerBinding.mainIvAvatar as View), ViewCompat.getTransitionName(headerBinding.mainIvAvatar) ?: "avatar")
-        val usernamePair = androidx.core.util.Pair.create((headerBinding.mainTvUsername as View), ViewCompat.getTransitionName(headerBinding.mainTvUsername) ?: "username")
+        val avatarPair =
+            androidx.core.util.Pair.create((headerBinding.mainIvAvatar as View), ViewCompat.getTransitionName(headerBinding.mainIvAvatar) ?: "avatar")
+        val usernamePair =
+            androidx.core.util.Pair.create((headerBinding.mainTvUsername as View), ViewCompat.getTransitionName(headerBinding.mainTvUsername) ?: "username")
 
         val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, avatarPair, usernamePair)
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 
+    private fun expandEditFab() {
+        val dis = binding.fabEditShare.height + 16.dp
+        binding.fabEditNew.show()
+        binding.fabEditDraft.show()
+        ValueAnimator.ofInt(0, dis * 2).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditNew.apply {
+                    translationY -= value - preValue
+                }
+                preValue = value
+            }
+            interpolator = OvershootInterpolator()
+            duration = 200
+            start()
+        }
+        ValueAnimator.ofInt(0, dis).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditDraft.translationY -= value - preValue
+                preValue = value
+            }
+            interpolator = OvershootInterpolator()
+            duration = 200
+            start()
+        }
+    }
+
+    private fun closEditFab() {
+        ValueAnimator.ofInt(0, abs(binding.fabEditNew.y - binding.fabEditShare.y).toInt()).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditNew.translationY += value - preValue
+                preValue = value
+            }
+            doOnEnd {
+                binding.fabEditNew.hide()
+            }
+            duration = 200
+            start()
+        }
+        ValueAnimator.ofInt(0, abs(binding.fabEditDraft.y - binding.fabEditShare.y).toInt()).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditDraft.translationY += value - preValue
+                preValue = value
+            }
+            doOnEnd {
+                binding.fabEditDraft.hide()
+            }
+            duration = 200
+            start()
+        }
+
+    }
 
 }

@@ -21,4 +21,8 @@ interface IImageShareService {
     fun navigateLikeFragment(@IdRes containerId: Int): Fragment
 
     fun navigateCollectFragment(@IdRes containerId: Int): Fragment
+
+    fun navigatePublishFragment(@IdRes containerId: Int): Fragment
+
+    fun navigateDraftFragment(@IdRes containerId: Int): Fragment
 }

@@ -10,12 +10,15 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.sll.lib_common.service.ServiceManager
+import com.sll.lib_framework.ext.res.drawable
+import com.sll.lib_framework.helper.AppHelper
 import com.sll.lib_framework.util.FileUtils
 import com.sll.lib_framework.util.debug
 import com.sll.lib_glide.transformation.BlendColorTransformation
@@ -34,6 +37,7 @@ import java.util.concurrent.TimeUnit
  * <br/>Created: 2023/08/18
  */
 
+
 /**
  * 全模块统一，设置头像
  * */
@@ -46,7 +50,7 @@ fun ImageView.setAvatar(url: String?) {
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .error(R.drawable.common_ic_default_avatar)
             .fallback(R.drawable.common_ic_default_avatar)
-            .placeholder(R.drawable.common_ic_default_avatar) // TODO: 设置一个加载动图
+            .placeholder(R.drawable.common_anim_loading) // TODO: 设置一个加载动图
             .signature { md ->
                 // 以 更新时间 作为 key 存储缓存
                 val time = ServiceManager.settingService.getUserAvatarLastUpdateTime()
@@ -84,13 +88,14 @@ inline fun ImageView.setLocalBackground(
     uri: Uri?,
     crossinline callback: (res: Drawable?) -> Unit = {}
 ) {
+    val preDrawable = this.drawable
     val a = Glide.with(this).load(uri)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE) // 保存裁剪过的数据，因为是本地数据
         .transform(BlendColorTransformation(Color.parseColor("#D0D0D0")))
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                // TODO: 恢复原图，或者给一个默认
-                return true // 加载失败时不更换原图
+                this@setLocalBackground.setImageDrawable(preDrawable)
+                return true
             }
 
             override fun onResourceReady(
@@ -125,11 +130,13 @@ inline fun ImageView.setRemoteBackground(
     url: String?,
     crossinline callback: (Drawable?) -> Unit = {}
 ) {
+    val preDrawable = this.drawable
     Glide.with(this).load(url)
-        .diskCacheStrategy(DiskCacheStrategy.ALL) // 缓存原数据，方便下载
+        .diskCacheStrategy(DiskCacheStrategy.RESOURCE) // 缓存原数据，方便下载
         .transform(BlendColorTransformation(Color.parseColor("#D0D0D0")))
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                this@setRemoteBackground.setImageDrawable(preDrawable)
                 return true // 加载失败时不更换原图
             }
 
@@ -141,6 +148,7 @@ inline fun ImageView.setRemoteBackground(
                 isFirstResource: Boolean
             ): Boolean {
                 callback(resource)
+                scaleType = ImageView.ScaleType.CENTER_CROP
                 return false
             }
         })
@@ -171,23 +179,41 @@ fun downloadOriginPictures(
                 bitmap,
                 prefix = "save",
                 format = Bitmap.CompressFormat.PNG,
-                ServiceManager.settingService.getPicturesSavePath()
+                savePath = path
             )
         )
     }
 }
 
 /**
- * 设置远程图片，不缓存在本地
+ * 设置远程图片
  *
  * */
  fun ImageView.setRemoteImage(
     url: String,
+    crop: Boolean = false
 ) {
+    this.scaleType = ImageView.ScaleType.CENTER_INSIDE
     Glide.with(this)
         .load(url)
-        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         .error(R.drawable.common_holder_error)
         .placeholder(R.drawable.common_anim_loading)
+        .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                if (crop) this@setRemoteImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                return false
+            }
+        })
         .into(this)
 }

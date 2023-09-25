@@ -12,6 +12,8 @@ const val BASE_URL_MAIN = "http://47.107.52.7:88/member/photo/"
 
 const val BASE_URL_YIYAN = "https://v1.hitokoto.cn/"
 
+const val BASE_URL_IMAGE = "https://api.likepoems.com/img/"
+
 const val APP_ID = "00354a923416474da1d6e2ecb64833ba"
 
 const val APP_SECRET = "94058f5102a9c813c49f8bd2fe7f4eec3c8b4"
@@ -19,6 +21,11 @@ const val APP_SECRET = "94058f5102a9c813c49f8bd2fe7f4eec3c8b4"
 const val APP_ID_LIN = "1f43d942186848fb87eeb76dcaee2872"
 
 const val APP_SECRET_LIN = "1309564bd23cd775a4405948db1c45ff64d83"
+
+const val APP_ID_LI = "7be86e8dbad845e09bc4673e4b78744d"
+
+const val APP_SECRET_LI = "975087f883584575142478225760ae4eff6bc"
+
 /** 请求成功 */
 const val CODE_OK = 200
 

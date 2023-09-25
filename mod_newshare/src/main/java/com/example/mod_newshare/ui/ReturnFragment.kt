@@ -1,5 +1,6 @@
 package com.example.mod_newshare.ui
 
+import android.app.Dialog
 import android.nfc.Tag
 import android.os.Bundle
 import android.provider.DocumentsContract.Root
@@ -23,12 +24,12 @@ class ReturnFragment : BottomSheetDialogFragment() {
     interface onDialogAction{
         fun saveDragt()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        val rootView = inflater.inflate(R.layout.newshare_fragment_return, container, false)
         binding = NewshareFragmentReturnBinding.inflate(layoutInflater)
         binding.root.apply {
             this.post {
@@ -46,9 +47,7 @@ class ReturnFragment : BottomSheetDialogFragment() {
     }
 
     fun initListener() {
-        Log.d(TAG, "beginListen: binding:${binding.toString()}, binding.save = ${binding.save.toString()}")
         binding.save.setOnClickListener {
-            Log.d(TAG, "save: win")
             action?.saveDragt()
         }
         binding.unsave.setOnClickListener {

@@ -1,16 +1,21 @@
 package com.sll.mod_detail.ui.activity
 
+import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.animation.doOnEnd
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.button.MaterialButton
 import com.sll.lib_common.constant.PATH_DETAIL_ACTIVITY_DETAIL
 import com.sll.lib_common.entity.dto.ImageShare
@@ -26,21 +31,27 @@ import com.sll.lib_framework.ext.view.divider
 import com.sll.lib_framework.ext.view.gone
 import com.sll.lib_framework.ext.view.height
 import com.sll.lib_framework.ext.view.locationOnScreen
+import com.sll.lib_framework.ext.view.throttleClick
 import com.sll.lib_framework.ext.view.visible
 import com.sll.lib_framework.util.SystemBarUtils
 import com.sll.lib_framework.util.ToastUtils
+import com.sll.lib_network.ext.requestResponse
 import com.sll.mod_detail.R
 import com.sll.mod_detail.adapter.DetailFirstCommentAdapter
 import com.sll.mod_detail.adapter.DetailImageAdapter
 import com.sll.mod_detail.adapter.FooterAdapter
 import com.sll.mod_detail.databinding.DetailActivityDetailBinding
 import com.sll.mod_detail.databinding.DetailLayoutBottomBarBinding
+import com.sll.mod_detail.repository.DetailRepository
 import com.sll.mod_detail.ui.fragment.CommentBottomFragment
 import com.sll.mod_detail.ui.vm.DetailViewModel
 import com.therouter.TheRouter
 import com.therouter.router.Route
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.abs
 import kotlin.reflect.KClass
 
@@ -48,7 +59,7 @@ import kotlin.reflect.KClass
  *
  *
  *
- * @author Gleamrise
+ * @author Preke-Li
  * <br/>Created: 2023/09/12
  */
 @Route(path = PATH_DETAIL_ACTIVITY_DETAIL)
@@ -56,21 +67,17 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
     companion object {
         private const val TAG = "DetailActivity"
 
-        private const val KEY_IMAGE_SHARE = "image_share"
+        const val KEY_IMAGE_SHARE = "image_share"
+
+        const val FLAG_SCROLL_TO_COMMENT = "comment"
 
         private const val MESSAGE_FOCUS = 1
 
-        private const val MESSAGE_CANCEL_FOCUS = 2
+        private const val MESSAGE_LIKE = 2
 
-        private const val MESSAGE_LIKE = 3
+        private const val MESSAGE_COLLECT = 3
 
-        private const val MESSAGE_CANCEL_LIKE = 4
-
-        private const val MESSAGE_COLLECT = 5
-
-        private const val MESSAGE_CANCEL_COLLECT = 6
-
-        private const val DELAY_SEND_MESSAGE = 500L
+        private const val DELAY_SEND_MESSAGE = 300L
     }
 
     /** 底部操作栏 */
@@ -83,6 +90,10 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
     private lateinit var mCommentAdapter: DetailFirstCommentAdapter
 
     private var mCommentFragment: CommentBottomFragment? = null
+
+    private var mScrollToComment = false
+
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
     private val mApiHandler = Handler(Looper.myLooper() ?: Looper.getMainLooper()) {
         when (it.what) {
@@ -98,6 +109,7 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
             MESSAGE_FOCUS -> {
                 viewModel.focusOrCancelUser()
             }
+
             else -> {
                 return@Handler false
             }
@@ -107,20 +119,58 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
 
     override fun onDefCreate(savedInstanceState: Bundle?) {
         TheRouter.inject(this)
-        viewModel.setImageShare(intent?.extras?.getParcelable("ImageShare")!!)
+        // 状态栏
         SystemBarUtils.immersiveStatusBar(this)
         binding.includeTopBar.root.post {
             val statusHeight = SystemBarUtils.getStatusBarHeight(this)
             binding.includeTopBar.spaceMargin.height(statusHeight)
         }
 
+        viewModel.setImageShare(intent?.extras?.getParcelable(KEY_IMAGE_SHARE)!!)
+        intent?.extras?.getBoolean(FLAG_SCROLL_TO_COMMENT, false)?.let {
+
+        }
+
         initView()
         initData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (mScrollToComment) {
+            mScrollToComment = false
+            binding.appBarLayout.apply {
+                post {
+                    val behavior = this.layoutParams.As<CoordinatorLayout.LayoutParams>()?.behavior as AppBarLayout.Behavior
+                    ValueAnimator.ofInt(0, -10000).apply {
+                        addUpdateListener {
+                            behavior.topAndBottomOffset = it.animatedValue as Int
+                            requestLayout()
+                        }
+                        duration = 200
+                        start()
+                    }
+                }
+            }
+        }
+    }
+
+
     override fun initViewBinding(container: ViewGroup?) = DetailActivityDetailBinding.inflate(layoutInflater)
 
     override fun getViewModelClass(): KClass<DetailViewModel> = DetailViewModel::class
+
+
+    /**
+     * 解析时间戳并格式化为年月日时分的字符串
+     *
+     * @param timestamp 时间戳
+     * @return 格式化后的时间字符串，例如：2023-07-19 14:30
+     */
+    private fun parseTimestamp(timestamp: Long): String {
+        val date = Date(timestamp)
+        return dateFormat.format(date)
+    }
 
     private fun initView() {
         initTopBar()
@@ -150,7 +200,7 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
             binding.includeTopBar.constraintLayoutPublisherInfo.apply {
                 if (offset > 0) {
                     val distAlpha = offset / 20f
-                    if (alpha == 1f  && distAlpha < 1f || alpha < 1f) alpha = distAlpha
+                    if (alpha == 1f && distAlpha < 1f || alpha < 1f) alpha = distAlpha
                 }
                 if (offset <= 0 && alpha != 0f) {
                     alpha = 0f
@@ -167,7 +217,6 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
         }
         launchOnCreated {
             viewModel.userFocusState.collect {
-                Log.i(TAG, "initTopBar: focusState Collect: $it")
                 setUserFocus(viewModel.userFocus)
             }
         }
@@ -228,6 +277,140 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
             }
         }
 
+
+        launchOnCreated {
+            viewModel.imageShare.collect {
+                it?.let { imageShare ->
+                    mBottomBarBinding.includeLike.apply {
+                        tvText.text = (imageShare.likeNum ?: "点赞").toString()
+                        ivIcon.setImageResource(if (imageShare.hasLike) R.drawable.detail_ic_like_fill else R.drawable.detail_ic_like)
+                    }
+
+                    mBottomBarBinding.includeCollect.apply {
+                        tvText.minWidth = 40.dp
+                        if (imageShare.hasCollect) {
+                            ivIcon.setImageResource(R.drawable.detail_ic_collect_fill)
+                            tvText.text = ""
+                        } else {
+                            ivIcon.setImageResource(R.drawable.detail_ic_collect)
+                            tvText.text = "收藏"
+                        }
+                    }
+                }
+
+            }
+        }
+        // 点赞
+        val item = viewModel.imageShare.value
+        if (item != null) {
+            // 点赞
+            mBottomBarBinding.includeLike.apply {
+                setLikeStyle(item.hasLike, item.likeNum ?: 0, false)
+                root.throttleClick(300L) {
+                    val preLike = root.getTag(R.id.detail_tag_like)?.As<Boolean>() ?: false
+                    val preLikeNum = item.likeNum ?: 0
+                    var curLikeNum: Int
+
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        if (preLike) {
+                            curLikeNum = preLikeNum - 1
+                            item.likeNum = curLikeNum
+                            setLikeStyle(false, likeCount = curLikeNum, false)
+                            if (item.likeId == null) {
+                                setLikeStyle(false, likeCount = curLikeNum, false)
+                            } else {
+                                viewModel.requestResponse {
+                                    DetailRepository.cancelLikeImageShare(item.likeId!!)
+                                }.collect { res ->
+                                    res.onSuccess {
+                                        // 同步状态
+                                        setLikeStyle(false, likeCount = curLikeNum, false)
+                                    }.onError {
+                                        ToastUtils.error("取消点赞失败，请检查网络~")
+                                        // 恢复原状
+                                        setLikeStyle(preLike, preLikeNum, false)
+                                        item.likeNum = preLikeNum
+                                    }
+                                }
+                            }
+                        } else { // 点赞
+                            curLikeNum = preLikeNum + 1
+                            item.likeNum = curLikeNum
+                            setLikeStyle(true, curLikeNum, true)
+                            viewModel.requestResponse {
+                                DetailRepository.likeImageShare(item.id)
+                            }.collect { res ->
+                                res.onSuccess {
+                                    setLikeStyle(true, curLikeNum, false)
+                                    // 更新 likeId
+                                    lifecycleScope.launch(Dispatchers.IO) {
+                                        viewModel.updateImageShare(item.id)
+                                    }
+                                }.onError {
+                                    ToastUtils.error("点赞失败，请检查网络~")
+                                    setLikeStyle(preLike, preLikeNum, false)
+                                    item.likeNum = preLikeNum
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 收藏
+            mBottomBarBinding.includeCollect.apply {
+                root.throttleClick(300L) {
+                    val preCollect = root.getTag(R.id.detail_tag_collect)?.As<Boolean>() ?: false
+                    val preCollectNum = item.collectNum ?: 0
+                    var curCollectNum: Int
+
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        if (preCollect) {
+                            curCollectNum = preCollectNum - 1
+                            item.collectNum = curCollectNum
+                            setCollectStyle(false, collectNum = curCollectNum, false)
+                            if (item.collectId == null) {
+                                setCollectStyle(false, collectNum = curCollectNum, false)
+                            } else {
+                                viewModel.requestResponse {
+                                    DetailRepository.cancelCollectImageShare(item.collectId!!)
+                                }.collect { res ->
+                                    res.onSuccess {
+                                        // 同步状态
+                                        setCollectStyle(false, collectNum = curCollectNum, false)
+                                    }.onError {
+                                        ToastUtils.error("取消点赞失败，请检查网络~")
+                                        // 恢复原状
+                                        setCollectStyle(preCollect, preCollectNum, false)
+                                        item.collectNum = preCollectNum
+                                    }
+                                }
+                            }
+                        } else { // 点赞
+                            curCollectNum = preCollectNum + 1
+                            item.collectNum= curCollectNum
+                            setCollectStyle(true, curCollectNum, true)
+                            viewModel.requestResponse {
+                                DetailRepository.collectImageShare(item.id)
+                            }.collect { res ->
+                                res.onSuccess {
+                                    setCollectStyle(true, curCollectNum, false)
+                                    // 更新 collectId
+                                    lifecycleScope.launch(Dispatchers.IO) {
+                                        viewModel.updateImageShare(item.id)
+                                    }
+                                }.onError {
+                                    ToastUtils.error("点赞失败，请检查网络~")
+                                    setCollectStyle(preCollect, preCollectNum, false)
+                                    item.collectNum = preCollectNum
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
 
@@ -236,13 +419,14 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
      * */
     private fun loadUserInfo(imageShare: ImageShare?) {
         imageShare?.let {
+            setUserFocus(it.hasFocus)
             viewModel.getUserInfoByUsername(it.username!!)
             binding.includeUser.apply {
                 // 用户名
                 tvUsername.text = it.username
                 binding.includeTopBar.tvPublisher.text = it.username
                 // 时间
-                tvTime.text = it.createTime
+                tvTime.text = parseTimestamp(it.createTime.toLong())
                 // 头像
                 launchOnStarted {
                     viewModel.userInfoState.collect { userInfo ->
@@ -252,7 +436,6 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
                         }
                     }
                 }
-                setUserFocus(it.hasFocus)
             }
         } ?: run {
             // TODO 当为空时做一个默认处理
@@ -292,7 +475,6 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
             } else {
                 binding.recyclerViewImages.gone()
             }
-
         }
     }
 
@@ -374,34 +556,127 @@ class DetailActivity : BaseMvvmActivity<DetailActivityDetailBinding, DetailViewM
     /**
      * 设置Button不同关注状态的样式
      * */
-    private fun setButtonFocusStyle(button: MaterialButton, focus: Boolean) {
-        val preFocus: Boolean = button.tag?.As<Boolean>() ?: false
-        // 关注且先前没有关注
-        if (focus && !preFocus) {
+    private fun setButtonFocusStyle(button: MaterialButton, focused: Boolean) {
+        lifecycleScope.launch(Dispatchers.Main) {
             button.apply {
-                tag = true
-                setIconResource(R.drawable.detail_ic_checked)
-                val color = color(R.color.detail_gray_dim)
-                iconTint = ColorStateList.valueOf(color)
-                setTextColor(color)
-                text = "已关注"
-                setTextColor(color(R.color.detail_white))
-                backgroundTintList = ColorStateList.valueOf(color("#E0E0E0"))
+                val preFocus = getTag(R.id.detail_tag_focus)?.As<Boolean>()
+                // 没有点赞且需要点赞
+                if ((preFocus == null || !preFocus) && focused) {
+                    setTag(R.id.detail_tag_focus, true)
+                    setIconResource(0)
+                    text = "已关注"
+                    setTextColor(context.color(R.color.detail_blue_cornflower))
+                    backgroundTintList = ColorStateList.valueOf(context.color(R.color.detail_blue_alice))
+                }
+                if ((preFocus == null || preFocus) && !focused) {
+                    setIconResource(R.drawable.detail_ic_plus)
+                    setTag(R.id.detail_tag_focus, false)
+                    text = "关注"
+                    setTextColor(context.color(R.color.detail_white))
+                    backgroundTintList = ColorStateList.valueOf(context.color(R.color.detail_blue_cornflower))
+                }
             }
         }
-        // 取消关注且先前已经关注
-        if (!focus && preFocus){
-            button.apply {
-                tag = false
-                setIconResource(R.drawable.detail_ic_plus)
-                val color = color(R.color.detail_white)
-                iconTint = ColorStateList.valueOf(color)
-                text = "关注"
-                setTextColor(color)
-                backgroundTintList = ColorStateList.valueOf(color(R.color.detail_blue_cornflower))
+    }
+
+    private fun setLikeStyle(liked: Boolean, likeCount: Int, animated: Boolean) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            mBottomBarBinding.includeLike.apply {
+                val preLiked = root.getTag(R.id.detail_tag_like)?.As<Boolean>()
+                // 初始化 TAG
+                if (preLiked == null) {
+                    if (liked) {
+                        ivIcon.setImageResource(R.drawable.detail_ic_like_fill)
+                        root.setTag(R.id.detail_tag_like, true)
+                    } else {
+                        ivIcon.setImageResource(R.drawable.detail_ic_like)
+                        root.setTag(R.id.detail_tag_like, false)
+                    }
+                    tvText.text = if (likeCount == 0) "赞" else likeCount.toString()
+                } else {
+                    // 没有点赞且需要点赞
+                    if (!preLiked && liked) {
+                        if (animated) {
+                            startActionAnimator(mBottomBarBinding.includeLike.ivIcon) {
+                                mBottomBarBinding.includeLike.ivIcon.setImageResource(R.drawable.detail_ic_like_fill)
+                            }
+                        } else {
+                            ivIcon.setImageResource(R.drawable.detail_ic_like_fill)
+                        }
+                        root.setTag(R.id.detail_tag_like, liked)
+                        tvText.text = likeCount.toString()
+                    }
+                    if (preLiked && !liked) {
+                        root.setTag(R.id.detail_tag_like, liked)
+                        ivIcon.setImageResource(R.drawable.detail_ic_like)
+                        tvText.text = if (likeCount == 0) "赞" else likeCount.toString()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setCollectStyle(collected: Boolean, collectNum: Int, animated: Boolean) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            mBottomBarBinding.includeCollect.apply {
+                val preCollect = root.getTag(R.id.detail_tag_collect)?.As<Boolean>()
+                // 初始化 TAG
+                if (preCollect == null) {
+                    if (collected) {
+                        ivIcon.setImageResource(R.drawable.detail_ic_collect_fill)
+                        root.setTag(R.id.detail_tag_collect, true)
+                    } else {
+                        ivIcon.setImageResource(R.drawable.detail_ic_collect)
+                        root.setTag(R.id.detail_tag_collect, false)
+                    }
+                    tvText.text = if (collectNum == 0) "收藏" else collectNum.toString()
+                } else {
+                    if (!preCollect && collected) {
+                        if (animated) {
+                            startActionAnimator(mBottomBarBinding.includeCollect.ivIcon) {
+                                mBottomBarBinding.includeCollect.ivIcon.setImageResource(R.drawable.detail_ic_collect_fill)
+                            }
+                        } else {
+                            ivIcon.setImageResource(R.drawable.detail_ic_collect_fill)
+                        }
+                        root.setTag(R.id.detail_tag_collect, true)
+                        tvText.text = collectNum.toString()
+                    }
+                    if (preCollect && !collected) {
+                        root.setTag(R.id.detail_tag_like, false)
+                        ivIcon.setImageResource(R.drawable.detail_ic_collect)
+                        tvText.text = if (collectNum == 0) "收藏" else collectNum.toString()
+                    }
+                }
             }
         }
     }
 
 
+    private fun startActionAnimator(view: View, onEnd: () -> Unit) {
+        val mLikeShrinkAnimator = ValueAnimator.ofFloat(1.4f, 1f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                view.scaleX = value
+                view.scaleY = value
+            }
+            duration = 100
+        }
+        ValueAnimator.ofFloat(1f, 1.4f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                view.scaleX = value
+                view.scaleY = value
+            }
+            duration = 200
+            interpolator = OvershootInterpolator(1.4f)
+            doOnEnd {
+                onEnd()
+                mLikeShrinkAnimator.start()
+            }
+            start()
+        }
+
+
+    }
 }

@@ -9,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.marginTop
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sll.lib_framework.ext.view.isVisible
+import com.sll.mod_main.R
 
 /**
  *
@@ -32,10 +33,10 @@ class UpperFloatingActionButtonBehavior(
 
     // 依赖于 FloatingActionButton 的出现
     override fun layoutDependsOn(parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
-        return dependency is FloatingActionButton && child != dependency
+        return dependency is FloatingActionButton && child != dependency && dependency.id == R.id.fab_back_to_top
     }
 
-    // 根据 下方的FAB 设置 fab 位置
+    // 根据 下方的 FAB 设置 fab 位置
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
         if (!(dependency is FloatingActionButton && child != dependency)) return false
         if (dependency.isShown && !upper) {
