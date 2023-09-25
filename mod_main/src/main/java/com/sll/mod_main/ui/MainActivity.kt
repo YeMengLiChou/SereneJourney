@@ -1,5 +1,7 @@
 package com.sll.mod_main.ui
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Bundle
@@ -7,17 +9,22 @@ import android.transition.Explode
 import android.transition.Fade
 import android.transition.Slide
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.CycleInterpolator
+import android.view.animation.OvershootInterpolator
 import android.view.animation.RotateAnimation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.animation.doOnEnd
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
@@ -25,6 +32,7 @@ import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
@@ -48,6 +56,7 @@ import com.sll.lib_framework.ext.res.tint
 import com.sll.lib_framework.ext.view.click
 import com.sll.lib_framework.ext.view.gone
 import com.sll.lib_framework.ext.view.height
+import com.sll.lib_framework.ext.view.invisible
 import com.sll.lib_framework.ext.view.longClick
 import com.sll.lib_framework.ext.view.setClipViewCornerRadius
 import com.sll.lib_framework.ext.view.setClipViewCornerTopRadius
@@ -62,7 +71,9 @@ import com.sll.mod_main.R
 import com.sll.mod_main.databinding.MainActivityMainBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerBinding
 import com.sll.mod_main.databinding.MainLayoutDrawerHeaderBinding
+import com.sll.mod_main.ui.behavior.FloatingActionButtonBehavior
 import kotlinx.coroutines.launch
+import okhttp3.internal.checkDuration
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -87,6 +98,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
     // TODO: 保存 fragments 的状态
     private val fragments = mutableListOf<Fragment>()
 
+    private var mCurrentPosition = 0
     // drawer的布局
     private lateinit var headerBinding: MainLayoutDrawerHeaderBinding
 
@@ -95,6 +107,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
     // drawer 部分的菜单
     private lateinit var headerPopupMenu: PopupMenu
 
+    private var mFabButtonExpanded = false
 
     // =========================== override ======================
 
@@ -106,7 +119,6 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         initDrawerUI()
         fitSystemBar()
     }
-
 
     override fun initViewBinding(container: ViewGroup?): MainActivityMainBinding =
         MainActivityMainBinding.inflate(layoutInflater)
@@ -179,7 +191,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                                 url
                             ) { uri ->
                                 uri?.let {
-                                    ToastUtils.success("图片已保存到:${it.toFile().path}~")
+                                    ToastUtils.success("图片已保存到:${it.path}~")
                                 } ?: ToastUtils.error("图片保存失败~")
                             }
                         } ?: ToastUtils.warn("暂无图片可下载~")
@@ -328,8 +340,16 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
 
                 override fun createFragment(position: Int): Fragment = fragments[position]
             }
+            this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    mCurrentPosition = position
+                }
+            })
         }
     }
+
+
 
     // 初始化 button 的点击事件
     private fun initButton() {
@@ -354,9 +374,22 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
             binding.appbarLayout.setExpanded(true, true)
         }
 
-        // 跳转到EditActivity
-        binding.fabEditShare.throttleClick {
+        // 跳转到 EditActivity
+        binding.fabEditShare.throttleClick(300L) {
+            if (mFabButtonExpanded) {
+                closEditFab()
+            } else {
+                expandEditFab()
+            }
+            mFabButtonExpanded = !mFabButtonExpanded
+        }
+
+        binding.fabEditNew.throttleClick {
             ServiceManager.newShareService.navigation(this@MainActivity)
+        }
+
+        binding.fabEditDraft.throttleClick {
+
         }
     }
 
@@ -489,9 +522,9 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         }
 
         // ----------------------- footer --------------------
-//        footerBinding.root.invisible()
+        footerBinding.root.invisible()
         footerBinding.mainTvSettings.apply {
-//            gone()
+            gone()
             click { ServiceManager.settingService.navigate() }
         }
 
@@ -521,7 +554,7 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
                                         url
                                     ) { uri ->
                                         uri?.let {
-                                            ToastUtils.success("图片已保存到:${it.toFile().path}~")
+                                            ToastUtils.success("图片已保存到:${it.path}~")
                                         } ?: ToastUtils.error("图片保存失败~")
                                     }
                                 } ?: ToastUtils.warn("暂无图片可下载~")
@@ -778,5 +811,64 @@ class MainActivity : BaseMvvmActivity<MainActivityMainBinding, MainViewModel>() 
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 
+    private fun expandEditFab() {
+        val dis = binding.fabEditShare.height + 16.dp
+        binding.fabEditNew.show()
+        binding.fabEditDraft.show()
+        ValueAnimator.ofInt(0, dis * 2).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditNew.apply {
+                    translationY -= value - preValue
+                }
+                preValue = value
+            }
+            interpolator = OvershootInterpolator()
+            duration = 200
+            start()
+        }
+        ValueAnimator.ofInt(0, dis).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditDraft.translationY -= value - preValue
+                preValue = value
+            }
+            interpolator = OvershootInterpolator()
+            duration = 200
+            start()
+        }
+    }
+
+    private fun closEditFab() {
+        ValueAnimator.ofInt(0, abs(binding.fabEditNew.y - binding.fabEditShare.y).toInt()).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditNew.translationY += value - preValue
+                preValue = value
+            }
+            doOnEnd {
+                binding.fabEditNew.hide()
+            }
+            duration = 200
+            start()
+        }
+        ValueAnimator.ofInt(0, abs(binding.fabEditDraft.y - binding.fabEditShare.y).toInt()).apply {
+            var preValue = 0
+            addUpdateListener {
+                val value = it.animatedValue as Int
+                binding.fabEditDraft.translationY += value - preValue
+                preValue = value
+            }
+            doOnEnd {
+                binding.fabEditDraft.hide()
+            }
+            duration = 200
+            start()
+        }
+
+    }
 
 }

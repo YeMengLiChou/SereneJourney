@@ -8,25 +8,27 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="56dp"
         android:text="是否保存草稿?"
         android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="#000000"
         android:background="@color/newshare_white"
         />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         app:dividerColor="@color/newshare_divide"/>
 
     <TextView
         android:id="@+id/save"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         android:background="@color/newshare_white"
         android:text="保存"
-        android:textColor="#E0000000"
-        android:textSize="20dp"
+        android:textColor="#A0000000"
+        android:textSize="16sp"
         android:gravity="center"
         android:clickable="true"
         android:focusable="true"/>
@@ -39,10 +41,10 @@
     <TextView
         android:id="@+id/unsave"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         android:text="不保存"
         android:background="@color/newshare_white"
-        android:textSize="20dp"
+        android:textSize="16sp"
         android:gravity="center"
         android:textColor="@color/newshare_red"
         android:clickable="true"
@@ -58,9 +60,9 @@
     <TextView
         android:id="@+id/cancel"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         android:text="取消"
-        android:textSize="20dp"
+        android:textSize="16sp"
         android:gravity="center"
         android:layout_marginTop="16dp"
         android:background="@color/newshare_white"

@@ -72,7 +72,6 @@ class ImageShare2ViewHolder(
             val value = it.animatedValue as Float
             binding.includeLike.ivIcon.scaleX = value
             binding.includeLike.ivIcon.scaleY = value
-            Log.i(TAG, "update: $value")
         }
         duration = 200
         interpolator = OvershootInterpolator(1.5f)
@@ -272,20 +271,20 @@ class ImageShare2ViewHolder(
             if (imageSize == 1) {
                 addImageViewToLinearLayout(width, height, item.imageUrlList[0], 0, item)
             } else {
-                val imageViewSize = (width - dp8).shl(1)
+                val imageViewSize = (width - dp8) / 2
                 addImageViewToLinearLayout(imageViewSize, imageViewSize, item.imageUrlList[0], 0, item)
                 addImageViewToLinearLayout(imageViewSize, imageViewSize, item.imageUrlList[1], 1, item).apply {
                     margin(left = dp8)
                 }
             }
             // 显示更多图片的标志
-            if (imageSize == 2) {
+            if (imageSize <= 2) {
                 binding.tvMoreImages.gone()
             } else {
                 // 设置标志
                 binding.tvMoreImages.visible()
                 binding.tvMoreImages.setClipViewCornerRadius(dp8.shl(1))
-                binding.tvMoreImages.text = "+${imageSize}"
+                binding.tvMoreImages.text = "+${imageSize - 2}"
             }
         }
     }
@@ -369,7 +368,7 @@ class ImageShare2ViewHolder(
 
         binding.includeComment.apply {
             ivIcon.setImageResource(R.drawable.is_ic_comment)
-            tvText.text = "评论"
+            tvText.gone()
             root.click {
                 mOnItemActionListener?.onCommentClick()
             }

@@ -88,13 +88,14 @@ inline fun ImageView.setLocalBackground(
     uri: Uri?,
     crossinline callback: (res: Drawable?) -> Unit = {}
 ) {
+    val preDrawable = this.drawable
     val a = Glide.with(this).load(uri)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE) // 保存裁剪过的数据，因为是本地数据
         .transform(BlendColorTransformation(Color.parseColor("#D0D0D0")))
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                // TODO: 恢复原图，或者给一个默认
-                return true // 加载失败时不更换原图
+                this@setLocalBackground.setImageDrawable(preDrawable)
+                return true
             }
 
             override fun onResourceReady(
@@ -129,11 +130,13 @@ inline fun ImageView.setRemoteBackground(
     url: String?,
     crossinline callback: (Drawable?) -> Unit = {}
 ) {
+    val preDrawable = this.drawable
     Glide.with(this).load(url)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE) // 缓存原数据，方便下载
         .transform(BlendColorTransformation(Color.parseColor("#D0D0D0")))
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                this@setRemoteBackground.setImageDrawable(preDrawable)
                 return true // 加载失败时不更换原图
             }
 
@@ -145,6 +148,7 @@ inline fun ImageView.setRemoteBackground(
                 isFirstResource: Boolean
             ): Boolean {
                 callback(resource)
+                scaleType = ImageView.ScaleType.CENTER_CROP
                 return false
             }
         })

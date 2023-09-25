@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <item android:id="@+id/main_tv_settings"
+
+
+    <item
+        android:id="@+id/main_tv_download"
         android:icon="@drawable/main_ic_download"
+        android:title="图片下载管理"
+        tools:show="true" />
+
+    <item
+        android:id="@+id/main_item_edit"
+        android:icon="@drawable/main_ic_draft"
+        android:title="草稿箱" />
+
+    <item
+        android:id="@+id/main_item_mine"
+        android:icon="@drawable/main_ic_mine"
+        android:title="@string/main_mine" />
+
+    <item
+        android:id="@+id/main_tv_settings"
+        android:icon="@drawable/main_ic_setting"
         android:title="设置"
-        tools:show="true"/>
-
-<!--    <item android:id="@+id/main_item_edit"-->
-<!--        android:title="草稿箱"-->
-<!--        android:icon="@drawable/main_ic_draft" />-->
-
-<!--    <item android:id="@+id/main_item_mine"-->
-<!--        android:title="@string/main_mine"-->
-<!--        android:icon="@drawable/main_ic_mine"/>-->
+        tools:show="true" />
 </menu>

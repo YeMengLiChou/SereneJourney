@@ -16,15 +16,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tv_text"
-        tools:src="@drawable/detail_ic_left_arrow"/>
+        tools:src="@drawable/newshare_ic_left_arrow"/>
 
     <TextView
         android:id="@+id/tv_text"
-        android:layout_width="48dp"
+        android:layout_width="36dp"
         android:layout_height="36dp"
         android:maxLines="1"
         tools:text="text"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

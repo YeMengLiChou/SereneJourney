@@ -26,8 +26,6 @@ sealed class Res<out T> {
     /** 请求重试时 */
     data class Retry(val attempt: Int) : Res<Int>()
 
-    object Empty : Res<Nothing>()
-
     /** 请求进行时 */
     object Loading : Res<Nothing>()
 
@@ -96,14 +94,6 @@ sealed class Res<out T> {
      * */
     inline fun onLoading(event: () -> Unit): Res<T> {
         if (this is Loading) {
-            // 此时已经自动转为 Loading 类型
-            event.invoke()
-        }
-        return this
-    }
-
-    inline fun omEmpty(event: () -> Unit): Res<T> {
-        if (this is Empty) {
             // 此时已经自动转为 Loading 类型
             event.invoke()
         }

@@ -48,13 +48,15 @@
         app:layout_constraintBottom_toTopOf="@id/bottom_bar"
         android:layout_marginTop="4dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/is_white">
 
         <LinearLayout
             android:id="@+id/linear_images"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/is_white"/>
 
         <TextView
             android:id="@+id/tv_more_images"
@@ -74,7 +76,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_bar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,9 +85,10 @@
         <include
             android:id="@+id/include_like"
             layout="@layout/is_layout_left_icon_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/include_comment"/>
 
         <include
             android:id="@+id/include_comment"

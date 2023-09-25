@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mod_newshare.adapter.UploadImagesAdapter
 import com.example.mod_newshare.databinding.NewshareActivityEditBinding
@@ -182,23 +183,21 @@ class EditActivity : BaseMvvmActivity<NewshareActivityEditBinding, EditViewModel
 
     fun updateRecycleView() {
         launchOnStarted {
-            //Uri列表变化时，提醒Recycleview更新
+            //Uri列表变化时，提醒Recyclerview更新
             launch {
                 viewModel.uriList.collect {
                     //adapter
-                    val adapter = UploadImagesAdapter(it!!)
+                    val adapter = UploadImagesAdapter(this@EditActivity, it!!)
                     adapter.setAction(object : UploadImagesAdapter.onAdapterAction {
                         override fun delete(index: Int) {
-                            Log.d(TAG, "delete: recycleViewDeleteIndex = $index")
                             viewModel.removeUri(index)
+                            adapter.notifyItemRemoved(index)
                         }
                     })
                     //manager
-                    val manager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-//                    val manager= StaggeredGridLayoutManager(3,LinearLayoutManager.VERTICAL)
+                    val manager = GridLayoutManager(this@EditActivity, 3)
                     binding.recycle.adapter = adapter
                     binding.recycle.layoutManager = manager
-                    Log.d(TAG, "onDefCreate: recycleView")
                 }
             }
         }

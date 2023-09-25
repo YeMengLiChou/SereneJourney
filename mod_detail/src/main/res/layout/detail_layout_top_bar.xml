@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@id/space_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/constraintLayout_publisher_info"
-        android:src="@drawable/detail_ic_left_arrow"/>
+        android:src="@drawable/newshare_ic_left_arrow"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout_publisher_info"

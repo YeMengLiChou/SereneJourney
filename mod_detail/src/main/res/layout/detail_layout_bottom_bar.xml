@@ -20,14 +20,13 @@
         android:paddingVertical="8dp"
         android:text="点我发送评论"
         android:gravity="center_vertical"
+        app:layout_constraintHorizontal_chainStyle="spread"
         android:background="@drawable/detail_shape_comment_bg"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintWidth_percent="0.5"
         app:layout_constraintEnd_toStartOf="@id/include_collect"/>
-
-
 
 
     <include
@@ -35,11 +34,10 @@
         layout="@layout/detail_layout_left_icon_textview"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_comment"
         app:layout_constraintEnd_toStartOf="@id/include_like"
-        />
+        app:layout_constraintStart_toEndOf="@id/tv_comment"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/include_like"
